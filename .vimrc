@@ -54,6 +54,7 @@ let g:quickrun_config['markdown'] = {
 syntax enable
 set background=dark
 colorscheme solarized
+
 "オートインデント
 set autoindent
 "タブ幅を設定する
@@ -65,5 +66,21 @@ set laststatus=2
 "ステータスラインに文字コードと改行文字を表示する
 set statusline=%<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
 
-"filetype plugin on
+" insertモードを抜けるとIMEオフ
+" set noimdisable
+" set iminsert=0 imsearch=0
+" set noimcmdline
+inoremap <silent> <ESC> <ESC>:set iminsert=0<CR>
 
+" カーソル行をハイライト
+set cursorline
+" カレントウィンドウにのみ罫線を引く
+augroup cch
+	autocmd! cch
+	autocmd WinLeave * set nocursorline
+	autocmd WinEnter,BufRead * set cursorline
+augroup END
+
+hi clear CursorLine
+hi CursorLine gui=underline
+highlight CursorLine ctermbg=black guibg=black

@@ -28,6 +28,26 @@ esac
 ### esac
 
 
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt hist_ignore_dups     # ignore duplication command history list
+setopt share_history        # share command history data
+
 ## alias設定
 #
 [ -f ~/.zshrc.alias ] && source ~/.zshrc.alias
+
+case "${OSTYPE}" in
+# Mac(Unix)
+darwin*)
+    # ここに設定
+    [ -f ~/.zshrc.osx ] && source ~/.zshrc.osx
+    ;;
+# Linux
+linux*)
+    # ここに設定
+    [ -f ~/.zshrc.linux ] && source ~/.zshrc.linux
+    ;;
+esac
+
