@@ -102,4 +102,5 @@ if has('gui_running')
 	set guioptions-=T
 	set guioptions-=m
 	set guioptions-=r
+	set ambiwidth=double
 endif
