@@ -96,3 +96,10 @@ set ttymouse=xterm2
 set clipboard=unnamed
 " 挿入モードでCtrl+kを押すとクリップボードの内容を貼り付けられるようにする "
 imap <C-p>  <ESC>"*pa
+
+if has('gui_running')
+	set guicursor=a:blinkon0
+	set guioptions-=T
+	set guioptions-=m
+	set guioptions-=r
+endif
