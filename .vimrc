@@ -95,7 +95,17 @@ if has('gui_running')
 	set guioptions-=T
 	set guioptions-=m
 	set guioptions-=r
-	set ambiwidth=double
+	if has('win32')
+		" Windows用
+		set guifont=MS_Gothic:h12:cSHIFTJIS
+		"set guifont=MS_Mincho:h12:cSHIFTJIS
+		" 行間隔の設定
+		set linespace=1
+		" 一部のUCS文字の幅を自動計測して決める
+		if has('kaoriya')
+			set ambiwidth=auto
+		endif
+	endif
 endif
 
 "------------------------------------
