@@ -31,6 +31,7 @@ filetype indent on
 " neobundle.vim end
 
 set encoding=utf-8
+set termencoding=utf-8
 set fileencodings=utf-8,ucs-bom,iso-2022-jp,euc-jp,cp932
 set fileformats=unix,dos,mac
 set t_Co=256 
