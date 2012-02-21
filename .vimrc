@@ -62,9 +62,9 @@ set laststatus=2
 set statusline=%<%f\ %m%r%h%w[%Y]%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
 
 " insertモードを抜けるとIMEオフ
-" set noimdisable
-" set iminsert=0 imsearch=0
-" set noimcmdline
+set noimdisable
+set iminsert=0 imsearch=0
+set noimcmdline
 inoremap <silent> <ESC> <ESC>:set iminsert=0<CR>
 
 " カーソル行をハイライト
@@ -148,3 +148,12 @@ function! s:unite_my_settings()"{{{
   " Start insert.
 "  let g:unite_enable_start_insert = 1
 endfunction"}}}
+
+
+"------------------------------------
+" unite.vim
+"------------------------------------
+" AutoComplPopを無効にする
+let g:acp_enableAtStartup = 0
+" NeoComplCacheを有効にする
+let g:neocomplcache_enable_at_startup = 1
