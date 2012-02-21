@@ -10,11 +10,6 @@ if has('vim_starting')
   call neobundle#rc(expand('~/.vim/bundle'))
 endif
 
-"neocomplcache.vim
-"quickrun.vim
-"vimproc + quickrun
-"unite.vim
-
 NeoBundle 'Shougo/neocomplcache.git'
 NeoBundle 'Shougo/neobundle.vim.git'
 NeoBundle 'Shougo/unite.vim.git'
@@ -27,12 +22,9 @@ NeoBundle 'thinca/vim-openbuf'
 NeoBundle 'choplin/unite-vim_hacks'
 NeoBundle 'tyru/open-browser.vim.git'
 NeoBundle 'https://github.com/hallison/vim-markdown.git'
-
+NeoBundle 'altercation/vim-colors-solarized'
 " NeoBundle 'Shougo/vinarise.git'
 " NeoBundle 'Shougo/vim-vcs.git'
-
-" Color Scheme
-NeoBundle 'altercation/vim-colors-solarized'
 
 filetype plugin on
 filetype indent on
@@ -40,11 +32,12 @@ filetype indent on
 
 set encoding=utf-8
 set fileencodings=utf-8,ucs-bom,iso-2022-jp,euc-jp,cp932
-"set fileencodings=iso-2022-jp,utf-8,ucs-bom,euc-jp,cp932
 set fileformats=unix,dos,mac
 set t_Co=256 
 
-"markdown
+"----------------------------------------------------
+" quickrun.vim
+"----------------------------------------------------
 let g:quickrun_config = {}
 let g:quickrun_config['markdown'] = {
       \ 'outputter': 'browser'
@@ -55,6 +48,8 @@ syntax enable
 set background=dark
 colorscheme solarized
 
+set nobackup
+
 "オートインデント
 set autoindent
 "タブ幅を設定する
@@ -64,7 +59,7 @@ set smartindent
 "ステータスラインを常に表示
 set laststatus=2
 "ステータスラインに文字コードと改行文字を表示する
-set statusline=%<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
+set statusline=%<%f\ %m%r%h%w[%Y]%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
 
 " insertモードを抜けるとIMEオフ
 " set noimdisable
@@ -94,8 +89,6 @@ set ttymouse=xterm2
 
 "ヤンクした文字は、システムのクリップボードに入れる"
 set clipboard=unnamed
-" 挿入モードでCtrl+kを押すとクリップボードの内容を貼り付けられるようにする "
-imap <C-p>  <ESC>"*pa
 
 if has('gui_running')
 	set guicursor=a:blinkon0
@@ -104,3 +97,44 @@ if has('gui_running')
 	set guioptions-=r
 	set ambiwidth=double
 endif
+
+"------------------------------------
+" unite.vim
+"------------------------------------
+nnoremap    [unite]   <Nop>
+nmap    ,u [unite]
+""" " 全部乗せ
+nnoremap <silent> [unite]a  :<C-u>UniteWithCurrentDir -buffer-name=files buffer file_mru bookmark file<CR>
+""" " ファイル一覧
+nnoremap <silent> [unite]f  :<C-u>Unite -buffer-name=files file<CR>
+""" " バッファ一覧
+nnoremap <silent> [unite]b  :<C-u>Unite buffer<CR>
+""" " 最近使用したファイル一覧
+nnoremap <silent> [unite]m  :<C-u>Unite file_mru<CR>
+""" " 常用セット
+nnoremap <silent> [unite]u  :<C-u>Unite buffer file_mru<CR>
+""" " 全部乗せ
+""" nnoremap :ua  :<C-u>UniteWithCurrentDir -no-split -buffer-name=files buffer file_mru bookmark file<CR>
+""" " ファイル一覧
+""" nnoremap :uf<CR>  :<C-u>Unite -no-split -buffer-name=files file<CR>
+""" " バッファ一覧
+""" nnoremap :ub  :<C-u>Unite -no-split buffer<CR>
+""" " 常用セット
+""" nnoremap :uu  :<C-u>Unite -no-split buffer file_mru<CR>
+""" " 最近使用したファイル一覧
+""" nnoremap :um  :<C-u>Unite -no-split file_mru<CR>
+""" " 現在のバッファのカレントディレクトリからファイル一覧
+""" nnoremap :ud  :<C-u>UniteWithBufferDir -no-split file<CR>
+
+autocmd FileType unite call s:unite_my_settings()
+function! s:unite_my_settings()"{{{
+  " Overwrite settings.
+  " ESCキーを2回押すと終了する
+  nmap <buffer> <ESC>      <Plug>(unite_exit)
+  nmap <buffer> <ESC><ESC> <Plug>(unite_exit)
+  imap <buffer> jj      <Plug>(unite_insert_leave)
+  nnoremap <silent><buffer> <C-k> :<C-u>call unite#mappings#do_action('preview')<CR>
+  imap <buffer> <C-w>     <Plug>(unite_delete_backward_path)
+  " Start insert.
+"  let g:unite_enable_start_insert = 1
+endfunction"}}}
