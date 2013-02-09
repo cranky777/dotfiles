@@ -1,7 +1,7 @@
 escape ^T^T
 startup_message off
 hardstatus on
-hardstatus alwayslastline "%w"
+hardstatus alwayslastline "%Lw"
 #term xterm-256color
 #termcapinfo xterm-256color 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 #defbce "on"
