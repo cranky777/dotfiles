@@ -24,6 +24,7 @@ NeoBundle 'choplin/unite-vim_hacks'
 NeoBundle 'tyru/open-browser.vim.git'
 NeoBundle 'hallison/vim-markdown.git'
 NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'Lokaltog/vim-powerline'
 
 " NeoBundle 'Shougo/vinarise.git'
 " NeoBundle 'Shougo/vim-vcs.git'
@@ -42,7 +43,8 @@ set fileformats=unix,dos,mac
 
 "StatusLine設定
 set laststatus=2
-set statusline=%<%f\ %m%r%h%w[%Y]%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
+"powerlineに変更
+"set statusline=%<%f\ %m%r%h%w[%Y]%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
 
 "インデント設定
 set autoindent
@@ -52,18 +54,19 @@ set smartindent
 
 "表示関連
 " カーソル行をハイライト
-set cursorline
-" カレントウィンドウにのみ罫線を引く
-augroup cch
-	autocmd! cch
-	autocmd WinLeave * set nocursorline
-	autocmd WinEnter,BufRead * set cursorline
-augroup END
-hi clear CursorLine
-hi CursorLine gui=underline
-highlight CursorLine ctermbg=black guibg=black
+""" set cursorline
+""" " カレントウィンドウにのみ罫線を引く
+""" augroup cch
+""" 	autocmd! cch
+""" 	autocmd WinLeave * set nocursorline
+""" 	autocmd WinEnter,BufRead * set cursorline
+""" augroup END
+""" hi clear CursorLine
+""" hi CursorLine gui=underline
+""" highlight CursorLine ctermbg=black guibg=black
 
 "補完関連
+autocmd FileType * setlocal formatoptions-=ro
 
 "Tags関連
 
@@ -80,11 +83,11 @@ colorscheme solarized
 "編集関連
 set backspace=2
 " OSのクリップボードを使用する
-set clipboard+=unnamed
+" set clipboard+=unnamed
 " ターミナルでマウスを使用できるようにする
-set mouse=a
-set guioptions+=a
-set ttymouse=xterm2
+" set mouse=a
+" set guioptions+=a
+" set ttymouse=xterm2
 
 "ヤンクした文字は、システムのクリップボードに入れる"
 set clipboard=unnamed
@@ -92,6 +95,7 @@ set clipboard=unnamed
 
 "その他
 " insertモードを抜けるとIMEオフ
+" aaaあああ
 set noimdisable
 set iminsert=0 imsearch=0
 set noimcmdline
@@ -122,6 +126,10 @@ endif
 "----------------------------------------------------
 let g:quickrun_config = {}
 let g:quickrun_config['markdown'] = {
+      \ 'outputter': 'browser'
+      \ }
+let g:quickrun_config['html'] = {
+			\ 'exec': 		'%c %s',
       \ 'outputter': 'browser'
       \ }
 
@@ -161,3 +169,8 @@ endfunction"}}}
 let g:acp_enableAtStartup = 0
 " NeoComplCacheを有効にする
 let g:neocomplcache_enable_at_startup = 1
+
+"------------------------------------
+" vim-powerline.vim
+"------------------------------------
+let g:Powerline_symbols = 'fancy'

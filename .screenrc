@@ -2,9 +2,9 @@ escape ^T^T
 startup_message off
 hardstatus on
 hardstatus alwayslastline "%w"
+#term xterm-256color
 #termcapinfo xterm-256color 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 #defbce "on"
-#term xterm-256color
 #term screen-256color
 #termcapinfo xterm 'Co#256:pa#32767:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
 #termcapinfo screen 'Co#256:pa#32767:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
@@ -13,3 +13,12 @@ vbell on
 bind 'U' eval "encoding utf8" "stuff 'export LANG=ja_JP.UTF-8\012'"
 bind 'E' eval "encoding euc" "stuff 'export LANG=ja_JP.EUC-JP\012'"
 defscrollback 1024
+
+term "screen-256color"
+# terminfo and termcap for nice 256 color terminal
+# allow bold colors - necessary for some reason
+attrcolor b ".I" 
+# tell screen how to set colors. AB = background, AF=foreground 
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm' 
+# erase background with current bg color 
+defbce "on" 
