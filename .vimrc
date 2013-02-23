@@ -23,8 +23,11 @@ NeoBundle 'thinca/vim-ref.git'
 NeoBundle 'choplin/unite-vim_hacks'
 NeoBundle 'tyru/open-browser.vim.git'
 NeoBundle 'hallison/vim-markdown.git'
-NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'Lokaltog/vim-powerline'
+NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'nanotech/jellybeans.vim'
+NeoBundle 'w0ng/vim-hybrid'
+NeoBundle 'tomasr/molokai'
 
 " NeoBundle 'Shougo/vinarise.git'
 " NeoBundle 'Shougo/vim-vcs.git'
@@ -71,14 +74,24 @@ autocmd FileType * setlocal formatoptions-=ro
 "Tags関連
 
 "検索関連
+" 検索文字列が小文字の場合は大文字小文字を区別なく検索する
+set ignorecase
+" 検索文字列に大文字が含まれている場合は区別して検索する
+set smartcase
+" 検索時に最後まで行ったら最初に戻る
+set wrapscan
+" 検索文字列入力時に順次対象文字列にヒットさせない
+set noincsearch
+" Esc連打で検索時にハイライトを消す
+nnoremap <Esc><Esc> :nohlsearch<CR>
 
 "移動関連
 
 "Color関連
 set t_Co=256 
 syntax enable
-set background=dark
-colorscheme solarized
+" set background=dark
+colorscheme jellybeans
 
 "編集関連
 set backspace=2
