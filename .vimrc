@@ -22,12 +22,13 @@ NeoBundle 'thinca/vim-openbuf'
 NeoBundle 'thinca/vim-ref.git'
 NeoBundle 'choplin/unite-vim_hacks'
 NeoBundle 'tyru/open-browser.vim.git'
-NeoBundle 'hallison/vim-markdown.git'
 NeoBundle 'Lokaltog/vim-powerline'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'w0ng/vim-hybrid'
 NeoBundle 'tomasr/molokai'
+NeoBundle "kien/ctrlp.vim"
+NeoBundle 'glidenote/memolist.vim'
 
 " NeoBundle 'Shougo/vinarise.git'
 " NeoBundle 'Shougo/vim-vcs.git'
@@ -187,3 +188,10 @@ let g:neocomplcache_enable_at_startup = 1
 " vim-powerline.vim
 "------------------------------------
 let g:Powerline_symbols = 'fancy'
+
+"------------------------------------
+" memolist.vim
+"------------------------------------
+nmap ,mf :exe "CtrlP" g:memolist_path<cr><f5>
+nmap ,mc :MemoNew<cr>
+nmap ,mg :MemoGrep<cr>
