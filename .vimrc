@@ -10,8 +10,10 @@ if has('vim_starting')
   call neobundle#rc(expand('~/.vim/bundle'))
 endif
 
-NeoBundle 'Shougo/neocomplcache.git'
+" NeoBundle 'Shougo/neocomplcache.git'
+NeoBundle 'Shougo/neocomplete.git'
 NeoBundle 'Shougo/neobundle.vim.git'
+NeoBundle 'Shougo/neosnippet.vim.git'
 NeoBundle 'Shougo/unite.vim.git'
 NeoBundle 'Shougo/vimfiler.git'
 NeoBundle 'Shougo/vimshell.git'
@@ -22,13 +24,18 @@ NeoBundle 'thinca/vim-openbuf'
 NeoBundle 'thinca/vim-ref.git'
 NeoBundle 'choplin/unite-vim_hacks'
 NeoBundle 'tyru/open-browser.vim.git'
-NeoBundle 'Lokaltog/vim-powerline'
+" NeoBundle 'Lokaltog/vim-powerline'
+NeoBundle 'bling/vim-airline'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'w0ng/vim-hybrid'
 NeoBundle 'tomasr/molokai'
-NeoBundle "kien/ctrlp.vim"
+NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'glidenote/memolist.vim'
+NeoBundle 'vim-scripts/VimRepress'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'davidhalter/jedi-vim', { 'rev': '3934359'}
+NeoBundle 'nvie/vim-flake8'
 
 " NeoBundle 'Shougo/vinarise.git'
 " NeoBundle 'Shougo/vim-vcs.git'
@@ -47,8 +54,6 @@ set fileformats=unix,dos,mac
 
 "StatusLine設定
 set laststatus=2
-"powerlineに変更
-"set statusline=%<%f\ %m%r%h%w[%Y]%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
 
 "インデント設定
 set autoindent
@@ -68,6 +73,9 @@ set smartindent
 """ hi clear CursorLine
 """ hi CursorLine gui=underline
 """ highlight CursorLine ctermbg=black guibg=black
+" デフォルト不可視文字は美しくないのでUnicodeで綺麗に
+" set list
+" set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%,eol:↲
 
 "補完関連
 autocmd FileType * setlocal formatoptions-=ro
@@ -134,11 +142,27 @@ if has('gui_running')
 	endif
 endif
 
+
+" release autogroup in MyAutoCmd
+augroup MyAutoCmd
+  autocmd!
+augroup END
+
+" make, grep などのコマンド後に自動的にQuickFixを開く
+autocmd MyAutoCmd QuickfixCmdPost make,grep,grepadd,vimgrep copen
+
+" QuickFixおよびHelpでは q でバッファを閉じる
+autocmd MyAutoCmd FileType help,qf nnoremap <buffer> q <C-w>c
+
+" w!! でスーパーユーザーとして保存（sudoが使える環境限定）
+cmap w!! w !sudo tee > /dev/null %
+
 "プラグイン関連
 "----------------------------------------------------
 " quickrun.vim
 "----------------------------------------------------
 let g:quickrun_config = {}
+let g:quickrun_config['*'] = {'runmode': "async:remote:vimproc", 'split': 'below'}
 let g:quickrun_config['markdown'] = {
       \ 'outputter': 'browser'
       \ }
@@ -146,6 +170,14 @@ let g:quickrun_config['html'] = {
 			\ 'exec': 		'%c %s',
       \ 'outputter': 'browser'
       \ }
+
+" for nosetest
+augroup QuickRunUnitTest
+  autocmd!
+  autocmd BufWinEnter,BufNewFile test_*.py set filetype=python.test
+augroup END
+" let g:quickrun_config['python.unit'] = {'command': 'nosetests', 'cmdopt': '-s -vv'}
+let g:quickrun_config['python.test'] = {'command': 'nosetests', 'exec': ['%c -v %s']}
 
 "------------------------------------
 " unite.vim
@@ -179,15 +211,43 @@ endfunction"}}}
 "------------------------------------
 " neocomplcache.vim
 "------------------------------------
-" AutoComplPopを無効にする
+" " AutoComplPopを無効にする
 let g:acp_enableAtStartup = 0
-" NeoComplCacheを有効にする
-let g:neocomplcache_enable_at_startup = 1
+" " NeoComplCacheを有効にする
+" let g:neocomplcache_enable_at_startup = 1
+
+
+"------------------------------------
+" jedi.vim & neocomplete.vim
+"------------------------------------
+autocmd FileType python setlocal omnifunc=jedi#completions
+
+let g:jedi#auto_vim_configuration = 0
+
+if !exists('g:neocomplete#force_omni_input_patterns')
+        let g:neocomplete#force_omni_input_patterns = {}
+endif
+
+let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
+let g:jedi#popup_select_first = 0
+let g:jedi#rename_command = "<leader>R"
+
 
 "------------------------------------
 " vim-powerline.vim
 "------------------------------------
-let g:Powerline_symbols = 'fancy'
+"let g:Powerline_symbols = 'fancy'
+
+"------------------------------------
+" vim-airline.vim
+"------------------------------------
+" let g:airline_powerline_fonts=1
+
+
+"------------------------------------
+" ctrlp.vim
+"------------------------------------
+let g:ctrlp_clear_cache_on_exit = 0
 
 "------------------------------------
 " memolist.vim
@@ -195,3 +255,25 @@ let g:Powerline_symbols = 'fancy'
 nmap ,mf :exe "CtrlP" g:memolist_path<cr><f5>
 nmap ,mc :MemoNew<cr>
 nmap ,mg :MemoGrep<cr>
+
+
+"------------------------------------
+" neosnippet.vim
+"------------------------------------
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+" Enable snipMate compatibility feature.
+let g:neosnippet#enable_snipmate_compatibility = 1
+" Tell Neosnippet about the other snippets
+let g:neosnippet#snippets_directory='~/.vim/snippets'
+" For snippet_complete marker.
+if has('conceal')
+	  set conceallevel=2 concealcursor=i
+endif
+
+"------------------------------------
+" vim-flake8
+"------------------------------------
+autocmd FileType python map <buffer> <F8> :call Flake8()<CR>
+let g:flake8_ignore="F403"

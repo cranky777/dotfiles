@@ -8,3 +8,6 @@
   generic = G move-last-line
   generic = ^F move-page-down
   generic = ^B move-page-up
+
+[core]
+	excludesfile = ~/.gitignore

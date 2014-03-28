@@ -20,3 +20,6 @@ samples
 
 .vim/bundle/
 
+__pycache__
+*.pyc
+
