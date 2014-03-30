@@ -252,6 +252,7 @@ let g:ctrlp_clear_cache_on_exit = 0
 "------------------------------------
 " memolist.vim
 "------------------------------------
+let g:memolist_path = "~/Dropbox/memolist_vim"
 nmap ,mf :exe "CtrlP" g:memolist_path<cr><f5>
 nmap ,mc :MemoNew<cr>
 nmap ,mg :MemoGrep<cr>
