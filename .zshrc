@@ -56,9 +56,9 @@ PATH=$PATH:$HOME/.rvm/bin:$HOME/bin # Add RVM to PATH for scripting
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
 
-if [ -f `which virtualenvwrapper.sh` ]; then
-    export WORKON_HOME=$HOME/.virtualenvs
-    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python
-    source `which virtualenvwrapper.sh`
-fi
+# if [ -f `which virtualenvwrapper.sh` ]; then
+#     export WORKON_HOME=$HOME/.virtualenvs
+#     export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python
+#     source `which virtualenvwrapper.sh`
+# fi
 

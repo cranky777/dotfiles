@@ -36,6 +36,7 @@ NeoBundle 'vim-scripts/VimRepress'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'davidhalter/jedi-vim', { 'rev': '3934359'}
 NeoBundle 'nvie/vim-flake8'
+NeoBundle 'mattn/emmet-vim'
 
 " NeoBundle 'Shougo/vinarise.git'
 " NeoBundle 'Shougo/vim-vcs.git'
@@ -112,7 +113,7 @@ set backspace=2
 " set ttymouse=xterm2
 
 "ヤンクした文字は、システムのクリップボードに入れる"
-set clipboard=unnamed
+"set clipboard=unnamed
 
 
 "その他
