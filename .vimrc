@@ -6,15 +6,14 @@ filetype off
 
 if has('vim_starting')
   set runtimepath+=~/.vim/bundle/neobundle.vim/
-
-  call neobundle#rc(expand('~/.vim/bundle'))
 endif
 
+call neobundle#begin(expand('~/.vim/bundle/'))
 " NeoBundle 'Shougo/neocomplcache.git'
-NeoBundle 'Shougo/neocomplete.git'
+" NeoBundle 'Shougo/neocomplete.git'
 NeoBundle 'Shougo/neobundle.vim.git'
-NeoBundle 'Shougo/neosnippet.vim.git'
-NeoBundle 'Shougo/unite.vim.git'
+" NeoBundle 'Shougo/neosnippet.vim.git'
+" NeoBundle 'Shougo/unite.vim.git'
 NeoBundle 'Shougo/vimfiler.git'
 NeoBundle 'Shougo/vimshell.git'
 NeoBundle 'Shougo/vimproc.git'
@@ -22,24 +21,30 @@ NeoBundle 'mattn/webapi-vim'
 NeoBundle 'thinca/vim-quickrun.git'
 NeoBundle 'thinca/vim-openbuf'
 NeoBundle 'thinca/vim-ref.git'
-NeoBundle 'choplin/unite-vim_hacks'
+"NeoBundle 'choplin/unite-vim_hacks'
 NeoBundle 'tyru/open-browser.vim.git'
 " NeoBundle 'Lokaltog/vim-powerline'
 NeoBundle 'bling/vim-airline'
-NeoBundle 'altercation/vim-colors-solarized'
+"NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'w0ng/vim-hybrid'
 NeoBundle 'tomasr/molokai'
 NeoBundle 'kien/ctrlp.vim'
+NeoBundle 'nixprime/cpsm'
 NeoBundle 'glidenote/memolist.vim'
 NeoBundle 'vim-scripts/VimRepress'
 NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'davidhalter/jedi-vim', { 'rev': '3934359'}
+" NeoBundle 'davidhalter/jedi-vim', { 'rev': '3934359'}
+NeoBundle 'davidhalter/jedi-vim'
 NeoBundle 'nvie/vim-flake8'
 NeoBundle 'mattn/emmet-vim'
+NeoBundle 'gosukiwi/vim-atom-dark'
+NeoBundle 'dracula/vim'
+NeoBundle 'scrooloose/nerdtree'
 
 " NeoBundle 'Shougo/vinarise.git'
 " NeoBundle 'Shougo/vim-vcs.git'
+call neobundle#end()
 
 filetype plugin on
 filetype indent on
@@ -100,8 +105,8 @@ nnoremap <Esc><Esc> :nohlsearch<CR>
 "Color関連
 set t_Co=256 
 syntax enable
-" set background=dark
-colorscheme jellybeans
+set background=dark
+colorscheme dracula
 
 "編集関連
 set backspace=2
@@ -173,65 +178,64 @@ let g:quickrun_config['html'] = {
       \ }
 
 " for nosetest
-augroup QuickRunUnitTest
-  autocmd!
-  autocmd BufWinEnter,BufNewFile test_*.py set filetype=python.test
-augroup END
-" let g:quickrun_config['python.unit'] = {'command': 'nosetests', 'cmdopt': '-s -vv'}
-let g:quickrun_config['python.test'] = {'command': 'nosetests', 'exec': ['%c -v %s']}
+" augroup QuickRunUnitTest
+"   autocmd!
+"   autocmd BufWinEnter,BufNewFile test_*.py set filetype=python.test
+" augroup END
+" " let g:quickrun_config['python.unit'] = {'command': 'nosetests', 'cmdopt': '-s -vv'}
+" let g:quickrun_config['python.test'] = {'command': 'nosetests', 'exec': ['%c -v %s']}
 
-"------------------------------------
-" unite.vim
-"------------------------------------
-nnoremap    [unite]   <Nop>
-nmap    ,u [unite]
-""" " 全部乗せ
-nnoremap <silent> [unite]a  :<C-u>UniteWithCurrentDir -buffer-name=files buffer file_mru bookmark file<CR>
-""" " ファイル一覧
-nnoremap <silent> [unite]f  :<C-u>Unite -buffer-name=files file<CR>
-""" " バッファ一覧
-nnoremap <silent> [unite]b  :<C-u>Unite buffer<CR>
-""" " 最近使用したファイル一覧
-nnoremap <silent> [unite]m  :<C-u>Unite file_mru<CR>
-""" " 常用セット
-nnoremap <silent> [unite]u  :<C-u>Unite buffer file_mru<CR>
-
-autocmd FileType unite call s:unite_my_settings()
-function! s:unite_my_settings()"{{{
-  " Overwrite settings.
-  " ESCキーを2回押すと終了する
-  nmap <buffer> <ESC>      <Plug>(unite_exit)
-  nmap <buffer> <ESC><ESC> <Plug>(unite_exit)
-  imap <buffer> jj      <Plug>(unite_insert_leave)
-  nnoremap <silent><buffer> <C-k> :<C-u>call unite#mappings#do_action('preview')<CR>
-  imap <buffer> <C-w>     <Plug>(unite_delete_backward_path)
-  " Start insert.
-  let g:unite_enable_start_insert = 1
-endfunction"}}}
-
-"------------------------------------
-" neocomplcache.vim
-"------------------------------------
-" " AutoComplPopを無効にする
-let g:acp_enableAtStartup = 0
-" " NeoComplCacheを有効にする
-" let g:neocomplcache_enable_at_startup = 1
+" "------------------------------------
+" " unite.vim
+" "------------------------------------
+" nnoremap    [unite]   <Nop>
+" nmap    ,u [unite]
+" """ " 全部乗せ
+" nnoremap <silent> [unite]a  :<C-u>UniteWithCurrentDir -buffer-name=files buffer file_mru bookmark file<CR>
+" """ " ファイル一覧
+" nnoremap <silent> [unite]f  :<C-u>Unite -buffer-name=files file<CR>
+" """ " バッファ一覧
+" nnoremap <silent> [unite]b  :<C-u>Unite buffer<CR>
+" """ " 最近使用したファイル一覧
+" nnoremap <silent> [unite]m  :<C-u>Unite file_mru<CR>
+" """ " 常用セット
+" nnoremap <silent> [unite]u  :<C-u>Unite buffer file_mru<CR>
+" 
+" autocmd FileType unite call s:unite_my_settings()
+" function! s:unite_my_settings()"{{{
+"   " Overwrite settings.
+"   " ESCキーを2回押すと終了する
+"   nmap <buffer> <ESC>      <Plug>(unite_exit)
+"   nmap <buffer> <ESC><ESC> <Plug>(unite_exit)
+"   imap <buffer> jj      <Plug>(unite_insert_leave)
+"   nnoremap <silent><buffer> <C-k> :<C-u>call unite#mappings#do_action('preview')<CR>
+"   imap <buffer> <C-w>     <Plug>(unite_delete_backward_path)
+"   " Start insert.
+"   let g:unite_enable_start_insert = 1
+" endfunction"}}}
+" 
+" "------------------------------------
+" " neocomplcache.vim
+" "------------------------------------
+" " " AutoComplPopを無効にする
+" let g:acp_enableAtStartup = 0
+" " " NeoComplCacheを有効にする
+" " let g:neocomplcache_enable_at_startup = 1
 
 
 "------------------------------------
 " jedi.vim & neocomplete.vim
 "------------------------------------
-autocmd FileType python setlocal omnifunc=jedi#completions
-
-let g:jedi#auto_vim_configuration = 0
-
-if !exists('g:neocomplete#force_omni_input_patterns')
-        let g:neocomplete#force_omni_input_patterns = {}
-endif
-
-let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
-let g:jedi#popup_select_first = 0
+let g:jedi#auto_initialization = 1
 let g:jedi#rename_command = "<leader>R"
+let g:jedi#popup_on_dot = 1
+
+
+" if !exists('g:neocomplete#force_omni_input_patterns')
+"         let g:neocomplete#force_omni_input_patterns = {}
+" endif
+
+" let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
 
 
 "------------------------------------
@@ -259,20 +263,20 @@ nmap ,mc :MemoNew<cr>
 nmap ,mg :MemoGrep<cr>
 
 
-"------------------------------------
-" neosnippet.vim
-"------------------------------------
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
-" Enable snipMate compatibility feature.
-let g:neosnippet#enable_snipmate_compatibility = 1
-" Tell Neosnippet about the other snippets
-let g:neosnippet#snippets_directory='~/.vim/snippets'
-" For snippet_complete marker.
-if has('conceal')
-	  set conceallevel=2 concealcursor=i
-endif
+" "------------------------------------
+" " neosnippet.vim
+" "------------------------------------
+" imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+" smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+" xmap <C-k>     <Plug>(neosnippet_expand_target)
+" " Enable snipMate compatibility feature.
+" let g:neosnippet#enable_snipmate_compatibility = 1
+" " Tell Neosnippet about the other snippets
+" let g:neosnippet#snippets_directory='~/.vim/snippets'
+" " For snippet_complete marker.
+" if has('conceal')
+" 	  set conceallevel=2 concealcursor=i
+" endif
 
 "------------------------------------
 " vim-flake8
