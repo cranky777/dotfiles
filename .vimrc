@@ -17,6 +17,7 @@ NeoBundle 'Shougo/neobundle.vim.git'
 NeoBundle 'Shougo/vimfiler.git'
 NeoBundle 'Shougo/vimshell.git'
 NeoBundle 'Shougo/vimproc.git'
+NeoBundle 'vim-jp/vimdoc-ja'
 NeoBundle 'mattn/webapi-vim'
 NeoBundle 'thinca/vim-quickrun.git'
 NeoBundle 'thinca/vim-openbuf'
@@ -123,11 +124,11 @@ set backspace=2
 
 "その他
 " insertモードを抜けるとIMEオフ
-" aaaあああ
 set noimdisable
 set iminsert=0 imsearch=0
 set noimcmdline
 inoremap <silent> <ESC> <ESC>:set iminsert=0<CR>
+set helplang=ja
 
 "gvim(主に windows 用)
 if has('gui_running')
