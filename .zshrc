@@ -52,15 +52,15 @@ linux*)
 esac
 
 
-PATH=$PATH:$HOME/.rvm/bin:$HOME/bin # Add RVM to PATH for scripting
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+# PATH=$PATH:$HOME/.rvm/bin:$HOME/bin # Add RVM to PATH for scripting
+# [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
-
-# if [ -f `which virtualenvwrapper.sh` ]; then
-#     export WORKON_HOME=$HOME/.virtualenvs
-#     export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python
-#     source `which virtualenvwrapper.sh`
-# fi
+## Set path for pyenv
+export PYENV_ROOT="${HOME}/.pyenv"
+if [ -d "${PYENV_ROOT}" ]; then
+    export PATH=${PYENV_ROOT}/bin:$PATH
+    eval "$(pyenv init -)"
+fi
 
 function ssh() {
   if [[ -n $(printenv TMUX) ]]
