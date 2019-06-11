@@ -8,52 +8,46 @@ if has('vim_starting')
   set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
 
+let $PATH = "~/.pyenv/shims:".$PATH
+
 call neobundle#begin(expand('~/.vim/bundle/'))
-" NeoBundle 'Shougo/neocomplcache.git'
-" NeoBundle 'Shougo/neocomplete.git'
-NeoBundle 'Shougo/neobundle.vim.git'
-" NeoBundle 'Shougo/neosnippet.vim.git'
-" NeoBundle 'Shougo/unite.vim.git'
-NeoBundle 'Shougo/vimfiler.git'
-NeoBundle 'Shougo/vimshell.git'
-NeoBundle 'Shougo/vimproc.git'
+NeoBundleFetch 'Shougo/neobundle.vim.git'
 NeoBundle 'vim-jp/vimdoc-ja'
 NeoBundle 'mattn/webapi-vim'
 NeoBundle 'thinca/vim-quickrun.git'
 NeoBundle 'thinca/vim-openbuf'
 NeoBundle 'thinca/vim-ref.git'
-"NeoBundle 'choplin/unite-vim_hacks'
 NeoBundle 'tyru/open-browser.vim.git'
-" NeoBundle 'Lokaltog/vim-powerline'
 NeoBundle 'bling/vim-airline'
 "NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'nanotech/jellybeans.vim'
-NeoBundle 'w0ng/vim-hybrid'
 NeoBundle 'tomasr/molokai'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'nixprime/cpsm'
 NeoBundle 'glidenote/memolist.vim'
-NeoBundle 'vim-scripts/VimRepress'
-NeoBundle 'tpope/vim-fugitive'
-" NeoBundle 'davidhalter/jedi-vim', { 'rev': '3934359'}
 NeoBundle 'davidhalter/jedi-vim'
 NeoBundle 'nvie/vim-flake8'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'mattn/vim-sqlfmt'
 NeoBundle 'gosukiwi/vim-atom-dark'
 NeoBundle 'dracula/vim'
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'justinmk/vim-dirvish'
+NeoBundle 'fatih/vim-go'
+NeoBundle 'MrPeterLee/VimWordpress'
+NeoBundle 'prabirshrestha/async.vim'
+NeoBundle 'prabirshrestha/vim-lsp'
+NeoBundle 'sjl/badwolf'
+NeoBundle 'vim-scripts/twilight'
+NeoBundle 'morhetz/gruvbox'
+NeoBundle 'joshdick/onedark.vim'
+" NeoBundle 'colors/atom-dark.vim'
 
-" NeoBundle 'Shougo/vinarise.git'
-" NeoBundle 'Shougo/vim-vcs.git'
+" NeoBundle 'scrooloose/nerdtree'
+" NeoBundle 'justinmk/vim-dirvish'
 call neobundle#end()
 
 filetype plugin on
 filetype indent on
 
-"基本設定
-set nobackup
 
 "エンコーディング関連
 set encoding=utf-8
@@ -104,12 +98,14 @@ set noincsearch
 nnoremap <Esc><Esc> :nohlsearch<CR>
 
 "移動関連
+runtime macros/matchit.vim
 
 "Color関連
 set t_Co=256 
 syntax enable
-set background=dark
+"set background=dark
 colorscheme dracula
+" colorscheme vim-atom-dark
 
 "編集関連
 set backspace=2
@@ -122,14 +118,10 @@ set backspace=2
 
 "ヤンクした文字は、システムのクリップボードに入れる"
 "set clipboard=unnamed
+set autowrite
 
 
 "その他
-" insertモードを抜けるとIMEオフ
-set noimdisable
-set iminsert=0 imsearch=0
-set noimcmdline
-inoremap <silent> <ESC> <ESC>:set iminsert=0<CR>
 set helplang=ja
 
 "gvim(主に windows 用)
@@ -249,7 +241,9 @@ autocmd FileType python setlocal completeopt-=preview
 "------------------------------------
 " vim-airline.vim
 "------------------------------------
-" let g:airline_powerline_fonts=1
+set ambiwidth=double
+let g:airline_powerline_fonts=1
+" let g:airline_theme='papercolor'
 
 
 "------------------------------------
@@ -306,3 +300,62 @@ nmap ,mg :MemoGrep<cr>
 "------------------------------------
 autocmd FileType python map <buffer> <F8> :call Flake8()<CR>
 let g:flake8_ignore="F403"
+
+"------------------------------------
+" vim-go
+"------------------------------------
+"filetype off
+"filetype plugin indent off
+au FileType go setlocal sw=4 ts=4 sts=4 noet
+" au FileType go setlocal makeprg=go\ build\ ./... errorformat=%f:%l:\ %m
+"u BufWritePre *.go Fmt
+"filetype plugin indent on
+"syntax on
+let g:go_fmt_command = "goimports"
+let g:go_version_warning = 0
+
+
+" if executable('gopls')
+"     au User lsp_setup call lsp#register_server({
+"         \ 'name': 'gopls',
+"         \ 'cmd': {server_info->['gopls', '-mode', 'stdio']},
+"         \ 'whitelist': ['go'],
+"         \ })
+" "    autocmd BufWritePre *.go LspDocumentFormatSync
+"     autocmd FileType go setlocal omnifunc=lsp#complete
+" let g:lsp_log_verbose = 1
+" let g:lsp_log_file = expand('~/vim-lsp.log')
+" endif
+
+if executable('go-langserver')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'go-langserver',
+        \ 'cmd': {server_info->['go-langserver', '-gocodecompletion']},
+        \ 'whitelist': ['go'],
+        \ })
+"    autocmd BufWritePre *.go LspDocumentFormatSync
+    autocmd FileType go setlocal omnifunc=lsp#complete
+    au FileType go nnoremap <buffer><silent> gd :<C-u>LspDefinition<CR>
+    au FileType go nnoremap <buffer><silent> gD :<C-u>LspReferences<CR>
+    au FileType go nnoremap <buffer><silent> gs :<C-u>LspDocumentSymbol<CR>
+    au FileType go nnoremap <buffer><silent> gS :<C-u>LspWorkspaceSymbol<CR>
+    au FileType go nnoremap <buffer><silent> gQ :<C-u>LspDocumentFormat<CR>
+    au FileType go vnoremap <buffer><silent> gQ :LspDocumentRangeFormat<CR>
+    au FileType go nnoremap <buffer><silent> K :<C-u>LspHover<CR>
+    au FileType go nnoremap <buffer><silent> <F1> :<C-u>LspImplementation<CR>
+    au FileType go nnoremap <buffer><silent> <F2> :<C-u>LspRename<CR>
+    au FileType go nnoremap <buffer><silent> <C-]> :<C-u>LspDefinition<CR>
+ let g:lsp_log_verbose = 1
+ let g:lsp_log_file = expand('~/vim-lsp.log')
+endif
+
+" if executable('bingo')
+"     au User lsp_setup call lsp#register_server({
+"         \ 'name': 'bingo',
+"         \ 'cmd': {server_info->['bingo', '-mode', 'stdio']},
+"         \ 'whitelist': ['go'],
+"         \ })
+" "    autocmd FileType go setlocal omnifunc=lsp#complete
+"  let g:lsp_log_verbose = 1
+"  let g:lsp_log_file = expand('~/vim-lsp.log')
+" endif
