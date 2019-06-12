@@ -4,46 +4,43 @@
 set nocompatible
 filetype off
 
-if has('vim_starting')
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
-endif
-
 let $PATH = "~/.pyenv/shims:".$PATH
 
-call neobundle#begin(expand('~/.vim/bundle/'))
-NeoBundleFetch 'Shougo/neobundle.vim.git'
-NeoBundle 'vim-jp/vimdoc-ja'
-NeoBundle 'mattn/webapi-vim'
-NeoBundle 'thinca/vim-quickrun.git'
-NeoBundle 'thinca/vim-openbuf'
-NeoBundle 'thinca/vim-ref.git'
-NeoBundle 'tyru/open-browser.vim.git'
-NeoBundle 'bling/vim-airline'
-"NeoBundle 'altercation/vim-colors-solarized'
-NeoBundle 'nanotech/jellybeans.vim'
-NeoBundle 'tomasr/molokai'
-NeoBundle 'kien/ctrlp.vim'
-NeoBundle 'nixprime/cpsm'
-NeoBundle 'glidenote/memolist.vim'
-NeoBundle 'davidhalter/jedi-vim'
-NeoBundle 'nvie/vim-flake8'
-NeoBundle 'mattn/emmet-vim'
-NeoBundle 'mattn/vim-sqlfmt'
-NeoBundle 'gosukiwi/vim-atom-dark'
-NeoBundle 'dracula/vim'
-NeoBundle 'fatih/vim-go'
-NeoBundle 'MrPeterLee/VimWordpress'
-NeoBundle 'prabirshrestha/async.vim'
-NeoBundle 'prabirshrestha/vim-lsp'
-NeoBundle 'sjl/badwolf'
-NeoBundle 'vim-scripts/twilight'
-NeoBundle 'morhetz/gruvbox'
-NeoBundle 'joshdick/onedark.vim'
-" NeoBundle 'colors/atom-dark.vim'
+call plug#begin('~/.vim/bundle')
+Plug 'vim-jp/vimdoc-ja'
+Plug 'mattn/webapi-vim'
+Plug 'thinca/vim-quickrun'
+Plug 'thinca/vim-openbuf'
+Plug 'thinca/vim-ref'
+Plug 'tyru/open-browser.vim'
+Plug 'bling/vim-airline'
+"Plug 'altercation/vim-colors-solarized'
+Plug 'nanotech/jellybeans.vim'
+Plug 'tomasr/molokai'
+Plug 'kien/ctrlp.vim'
+Plug 'nixprime/cpsm'
+Plug 'glidenote/memolist.vim'
+Plug 'davidhalter/jedi-vim'
+Plug 'nvie/vim-flake8'
+Plug 'mattn/emmet-vim'
+Plug 'mattn/vim-sqlfmt'
+Plug 'gosukiwi/vim-atom-dark'
+Plug 'dracula/vim'
+Plug 'fatih/vim-go'
+Plug 'MrPeterLee/VimWordpress'
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'sjl/badwolf'
+Plug 'vim-scripts/twilight'
+Plug 'morhetz/gruvbox'
+Plug 'joshdick/onedark.vim'
+Plug 'cocopon/iceberg.vim'
+" Plug 'colors/atom-dark.vim'
 
-" NeoBundle 'scrooloose/nerdtree'
-" NeoBundle 'justinmk/vim-dirvish'
-call neobundle#end()
+" Plug 'scrooloose/nerdtree'
+" Plug 'justinmk/vim-dirvish'
+" call neobundle#end()
+call plug#end()
 
 filetype plugin on
 filetype indent on
@@ -105,6 +102,7 @@ set t_Co=256
 syntax enable
 "set background=dark
 colorscheme dracula
+hi Comment ctermfg=DarkCyan
 " colorscheme vim-atom-dark
 
 "編集関連
