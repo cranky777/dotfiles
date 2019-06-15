@@ -64,7 +64,7 @@ esac
 
 # PATH=$PATH:$HOME/.rvm/bin:$HOME/bin # Add RVM to PATH for scripting
 # [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-export GOPATH=$HOME
+export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin:$HOME/.pyenv/shims
 
 ## Set path for pyenv
@@ -87,22 +87,38 @@ function ssh() {
   fi
 }
 
-# peco
-function peco-select-history() {
+# filter
+export FZF_DEFAULT_OPTS='--height 50% --layout=reverse --border'
+FILTER=fzf
+function filter-select-history() {
     # historyを番号なし、逆順、最初から表示。
     # 順番を保持して重複を削除。
     # カーソルの左側の文字列をクエリにしてpecoを起動
     # \nを改行に変換
-    BUFFER="$(history -nr 1 | awk '!a[$0]++' | peco --query "$LBUFFER" | sed 's/\\n/\n/')"
-    CURSOR=$#BUFFER             # カーソルを文末に移動
-    zle -R -c                   # refresh
+### 		BUFFER="$(history -nr 1 | awk '!a[$0]++' | $FILTER --query "$LBUFFER" | sed 's/\\n/\n/')"
+###     CURSOR=$#BUFFER             # カーソルを文末に移動
+###     zle -R -c                   # refresh
+		BUFFER=$(history -n -r 1 | fzf --no-sort +m --query "$LBUFFER" --prompt="History > ")
+		CURSOR=$#BUFFER
+		zle reset-prompt
 }
-zle -N peco-select-history
-bindkey '^R' peco-select-history
+zle -N filter-select-history
+bindkey '^R' filter-select-history
 
-function peco-kill () {
-    ps -ef | peco | awk '{ print $2 }' | xargs kill
+function filter-kill () {
+	ps -ef | $FILTER | awk '{ print $2 }' | xargs kill
     zle -R -c                   # refresh
 }
-zle -N peco-kill
-alias peco-kill=peco-kill
+zle -N filter-kill
+alias "${FILTER}-kill"=filter-kill
+
+
+# fd - cd to selected directory
+fcd() {
+  local dir
+  dir=$(find ${1:-.} -path '*/\.*' -prune \
+                  -o -type d -print 2> /dev/null | fzf +m) &&
+  cd "$dir"
+}
+zle -N fcd
+alias fcd=fcd

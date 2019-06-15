@@ -1,8 +1,6 @@
 #!/bin/bash
 
-DOT_FILES=( .bash_profile .bashrc .gitconfig .gitignore .screenrc .vimrc .zshrc .zshrc.alias .zshrc.osx .tmux.conf)
-
-for file in ${DOT_FILES[@]}
+for file in `find . -name "\.*" -type f`
 do
 	ln -s $HOME/dotfiles/$file $HOME/$file
 done

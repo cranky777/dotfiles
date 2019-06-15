@@ -17,7 +17,7 @@ Plug 'bling/vim-airline'
 "Plug 'altercation/vim-colors-solarized'
 Plug 'nanotech/jellybeans.vim'
 Plug 'tomasr/molokai'
-Plug 'kien/ctrlp.vim'
+"Plug 'kien/ctrlp.vim'
 Plug 'nixprime/cpsm'
 Plug 'glidenote/memolist.vim'
 Plug 'davidhalter/jedi-vim'
@@ -35,6 +35,8 @@ Plug 'vim-scripts/twilight'
 Plug 'morhetz/gruvbox'
 Plug 'joshdick/onedark.vim'
 Plug 'cocopon/iceberg.vim'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
 " Plug 'colors/atom-dark.vim'
 
 " Plug 'scrooloose/nerdtree'
@@ -61,21 +63,9 @@ set tabstop=2
 set shiftwidth=2
 set smartindent
 
-"表示関連
-" カーソル行をハイライト
-""" set cursorline
-""" " カレントウィンドウにのみ罫線を引く
-""" augroup cch
-""" 	autocmd! cch
-""" 	autocmd WinLeave * set nocursorline
-""" 	autocmd WinEnter,BufRead * set cursorline
-""" augroup END
-""" hi clear CursorLine
-""" hi CursorLine gui=underline
-""" highlight CursorLine ctermbg=black guibg=black
-" デフォルト不可視文字は美しくないのでUnicodeで綺麗に
-" set list
-" set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%,eol:↲
+"キーマッピング
+nnoremap ZQ <Nop>
+nnoremap Q <Nop>
 
 "補完関連
 autocmd FileType * setlocal formatoptions-=ro
@@ -93,6 +83,8 @@ set wrapscan
 set noincsearch
 " Esc連打で検索時にハイライトを消す
 nnoremap <Esc><Esc> :nohlsearch<CR>
+" 相対PATHを扱えるようにする
+autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
 
 "移動関連
 runtime macros/matchit.vim
@@ -141,6 +133,20 @@ if has('gui_running')
 	endif
 endif
 
+" MoveToNewTab
+nnoremap <silent> tm :<C-u>call <SID>MoveToNewTab()<CR>
+function! s:MoveToNewTab()
+    tab split
+    tabprevious
+
+    if winnr('$') > 1
+        close
+    elseif bufnr('$') > 1
+        buffer #
+    endif
+
+    tabnext
+endfunction
 
 " release autogroup in MyAutoCmd
 augroup MyAutoCmd
@@ -169,52 +175,6 @@ let g:quickrun_config['html'] = {
 			\ 'exec': 		'%c %s',
       \ 'outputter': 'browser'
       \ }
-
-" for nosetest
-" augroup QuickRunUnitTest
-"   autocmd!
-"   autocmd BufWinEnter,BufNewFile test_*.py set filetype=python.test
-" augroup END
-" " let g:quickrun_config['python.unit'] = {'command': 'nosetests', 'cmdopt': '-s -vv'}
-" let g:quickrun_config['python.test'] = {'command': 'nosetests', 'exec': ['%c -v %s']}
-
-" "------------------------------------
-" " unite.vim
-" "------------------------------------
-" nnoremap    [unite]   <Nop>
-" nmap    ,u [unite]
-" """ " 全部乗せ
-" nnoremap <silent> [unite]a  :<C-u>UniteWithCurrentDir -buffer-name=files buffer file_mru bookmark file<CR>
-" """ " ファイル一覧
-" nnoremap <silent> [unite]f  :<C-u>Unite -buffer-name=files file<CR>
-" """ " バッファ一覧
-" nnoremap <silent> [unite]b  :<C-u>Unite buffer<CR>
-" """ " 最近使用したファイル一覧
-" nnoremap <silent> [unite]m  :<C-u>Unite file_mru<CR>
-" """ " 常用セット
-" nnoremap <silent> [unite]u  :<C-u>Unite buffer file_mru<CR>
-" 
-" autocmd FileType unite call s:unite_my_settings()
-" function! s:unite_my_settings()"{{{
-"   " Overwrite settings.
-"   " ESCキーを2回押すと終了する
-"   nmap <buffer> <ESC>      <Plug>(unite_exit)
-"   nmap <buffer> <ESC><ESC> <Plug>(unite_exit)
-"   imap <buffer> jj      <Plug>(unite_insert_leave)
-"   nnoremap <silent><buffer> <C-k> :<C-u>call unite#mappings#do_action('preview')<CR>
-"   imap <buffer> <C-w>     <Plug>(unite_delete_backward_path)
-"   " Start insert.
-"   let g:unite_enable_start_insert = 1
-" endfunction"}}}
-" 
-" "------------------------------------
-" " neocomplcache.vim
-" "------------------------------------
-" " " AutoComplPopを無効にする
-" let g:acp_enableAtStartup = 0
-" " " NeoComplCacheを有効にする
-" " let g:neocomplcache_enable_at_startup = 1
-
 
 "------------------------------------
 " jedi.vim & neocomplete.vim
@@ -247,26 +207,37 @@ let g:airline_powerline_fonts=1
 "------------------------------------
 " ctrlp.vim
 "------------------------------------
-" キャッシュディレクトリ
-let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
+""" " キャッシュディレクトリ
+""" let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
+""" 
+""" " キャッシュを終了時に削除しない
+""" let g:ctrlp_clear_cache_on_exit = 0
+""" 
+""" " 遅延再描画
+""" let g:ctrlp_lazy_update = 1
+""" 
+""" " ルートパスと認識させるためのファイル
+""" let g:ctrlp_root_markers = ['Gemfile', 'pom.xml', 'build.xml']
+""" 
+""" " CtrlPのウィンドウ最大高さ
+""" let g:ctrlp_max_height = 20
+""" 
+""" " 無視するディレクトリ
+""" let g:ctrlp_custom_ignore = {
+"""   \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+"""   \ 'file': '\v\.(exe|so|dll)$',
+"""   \ 'link': 'some_bad_symbolic_links',
+"""   \ }
 
-" キャッシュを終了時に削除しない
-let g:ctrlp_clear_cache_on_exit = 0
-
-" 遅延再描画
-let g:ctrlp_lazy_update = 1
-
-" ルートパスと認識させるためのファイル
-let g:ctrlp_root_markers = ['Gemfile', 'pom.xml', 'build.xml']
-
-" CtrlPのウィンドウ最大高さ
-let g:ctrlp_max_height = 20
-
-" 無視するディレクトリ
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-  \ 'file': '\v\.(exe|so|dll)$',
-  \ 'link': 'some_bad_symbolic_links',
+"------------------------------------
+" fzf.vim
+"------------------------------------
+" nnoremap <C-b> :Buffers<CR>
+" nnoremap <C-g> :Rg<Space>
+nnoremap <leader><leader> :Commands<CR>
+nnoremap <C-p> :Files<CR>
+let g:fzf_action = {
+  \ 'ctrl-o': 'tab split'
   \ }
 
 "------------------------------------
@@ -276,22 +247,6 @@ let g:memolist_path = "~/Dropbox/memolist_vim"
 nmap ,mf :exe "CtrlP" g:memolist_path<cr><f5>
 nmap ,mc :MemoNew<cr>
 nmap ,mg :MemoGrep<cr>
-
-
-" "------------------------------------
-" " neosnippet.vim
-" "------------------------------------
-" imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-" smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-" xmap <C-k>     <Plug>(neosnippet_expand_target)
-" " Enable snipMate compatibility feature.
-" let g:neosnippet#enable_snipmate_compatibility = 1
-" " Tell Neosnippet about the other snippets
-" let g:neosnippet#snippets_directory='~/.vim/snippets'
-" " For snippet_complete marker.
-" if has('conceal')
-" 	  set conceallevel=2 concealcursor=i
-" endif
 
 "------------------------------------
 " vim-flake8
