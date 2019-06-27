@@ -74,20 +74,21 @@ if [ -d "${PYENV_ROOT}" ]; then
     eval "$(pyenv init -)"
 fi
 
-function ssh() {
-  if [[ -n $(printenv TMUX) ]]
-  then
-    local window_name=$(tmux display -p '#{window_name}')
-    tmux rename-window -- "$@[-1]" # zsh specified
-    # tmux rename-window -- "${!#}" # for bash
-    command ssh $@
-    tmux rename-window $window_name
-  else
-    command ssh $@
-  fi
-}
+# function ssh() {
+#   if [[ -n $(printenv TMUX) ]]
+#   then
+#     local window_name=$(tmux display -p '#{window_name}')
+#     tmux rename-window -- "$@[-1]" # zsh specified
+#     # tmux rename-window -- "${!#}" # for bash
+#     command ssh $@
+#     tmux rename-window $window_name
+#   else
+#     command ssh $@
+#   fi
+# }
 
 # filter
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_OPTS='--height 50% --layout=reverse --border'
 FILTER=fzf
 function filter-select-history() {
@@ -122,3 +123,5 @@ fcd() {
 }
 zle -N fcd
 alias fcd=fcd
+
+export LANG="ja_JP.UTF-8"
