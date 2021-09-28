@@ -26,10 +26,19 @@ Plug 'mattn/emmet-vim'
 Plug 'mattn/vim-sqlfmt'
 Plug 'gosukiwi/vim-atom-dark'
 Plug 'dracula/vim'
-Plug 'fatih/vim-go'
-Plug 'MrPeterLee/VimWordpress'
+" Plug 'fatih/vim-go'
+" Plug 'MrPeterLee/VimWordpress'
+
 Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'
+Plug 'mattn/vim-lsp-icons'
+
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
+
 Plug 'sjl/badwolf'
 Plug 'vim-scripts/twilight'
 Plug 'morhetz/gruvbox'
@@ -37,6 +46,9 @@ Plug 'joshdick/onedark.vim'
 Plug 'cocopon/iceberg.vim'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
+Plug 'ayu-theme/ayu-vim'
+Plug 'Lokaltog/vim-easymotion'
+Plug 'tpope/vim-repeat'
 " Plug 'colors/atom-dark.vim'
 
 " Plug 'scrooloose/nerdtree'
@@ -66,6 +78,8 @@ set smartindent
 "キーマッピング
 nnoremap ZQ <Nop>
 nnoremap Q <Nop>
+noremap <C-j> <esc>
+noremap! <C-j> <esc>
 
 "補完関連
 autocmd FileType * setlocal formatoptions-=ro
@@ -92,9 +106,10 @@ runtime macros/matchit.vim
 "Color関連
 set t_Co=256 
 syntax enable
-"set background=dark
-colorscheme dracula
-hi Comment ctermfg=DarkCyan
+set background=dark
+colorscheme iceberg
+"colorscheme dracula
+"hi Comment ctermfg=DarkCyan
 " colorscheme vim-atom-dark
 
 "編集関連
@@ -264,51 +279,75 @@ au FileType go setlocal sw=4 ts=4 sts=4 noet
 "u BufWritePre *.go Fmt
 "filetype plugin indent on
 "syntax on
-let g:go_fmt_command = "goimports"
-let g:go_version_warning = 0
+" let g:go_fmt_command = "goimports"
+" let g:go_version_warning = 0
+
+"------------------------------------
+" easymotion
+"------------------------------------
+map <Leader> <Plug>(easymotion-prefix)
+map f <Plug>(easymotion-fl)
+map t <Plug>(easymotion-tl)
+map F <Plug>(easymotion-Fl)
+map T <Plug>(easymotion-Tl)
+nmap <Leader>s <Plug>(easymotion-s2)
+xmap <Leader>s <Plug>(easymotion-s2)
 
 
-" if executable('gopls')
-"     au User lsp_setup call lsp#register_server({
-"         \ 'name': 'gopls',
-"         \ 'cmd': {server_info->['gopls', '-mode', 'stdio']},
-"         \ 'whitelist': ['go'],
-"         \ })
-" "    autocmd BufWritePre *.go LspDocumentFormatSync
-"     autocmd FileType go setlocal omnifunc=lsp#complete
-" let g:lsp_log_verbose = 1
-" let g:lsp_log_file = expand('~/vim-lsp.log')
-" endif
+"------------------------------------
+" easymotion
+"------------------------------------
 
-if executable('go-langserver')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'go-langserver',
-        \ 'cmd': {server_info->['go-langserver', '-gocodecompletion']},
-        \ 'whitelist': ['go'],
-        \ })
-"    autocmd BufWritePre *.go LspDocumentFormatSync
-    autocmd FileType go setlocal omnifunc=lsp#complete
-    au FileType go nnoremap <buffer><silent> gd :<C-u>LspDefinition<CR>
-    au FileType go nnoremap <buffer><silent> gD :<C-u>LspReferences<CR>
-    au FileType go nnoremap <buffer><silent> gs :<C-u>LspDocumentSymbol<CR>
-    au FileType go nnoremap <buffer><silent> gS :<C-u>LspWorkspaceSymbol<CR>
-    au FileType go nnoremap <buffer><silent> gQ :<C-u>LspDocumentFormat<CR>
-    au FileType go vnoremap <buffer><silent> gQ :LspDocumentRangeFormat<CR>
-    au FileType go nnoremap <buffer><silent> K :<C-u>LspHover<CR>
-    au FileType go nnoremap <buffer><silent> <F1> :<C-u>LspImplementation<CR>
-    au FileType go nnoremap <buffer><silent> <F2> :<C-u>LspRename<CR>
-    au FileType go nnoremap <buffer><silent> <C-]> :<C-u>LspDefinition<CR>
- let g:lsp_log_verbose = 1
- let g:lsp_log_file = expand('~/vim-lsp.log')
+if empty(globpath(&rtp, 'autoload/lsp.vim'))
+  finish
 endif
 
-" if executable('bingo')
-"     au User lsp_setup call lsp#register_server({
-"         \ 'name': 'bingo',
-"         \ 'cmd': {server_info->['bingo', '-mode', 'stdio']},
-"         \ 'whitelist': ['go'],
-"         \ })
-" "    autocmd FileType go setlocal omnifunc=lsp#complete
-"  let g:lsp_log_verbose = 1
-"  let g:lsp_log_file = expand('~/vim-lsp.log')
-" endif
+" function! s:on_lsp_buffer_enabled() abort
+"   setlocal omnifunc=lsp#complete
+"   setlocal signcolumn=yes
+"   nmap <buffer> gd <plug>(lsp-definition)
+"   nmap <buffer> <f2> <plug>(lsp-rename)
+"   inoremap <expr> <cr> pumvisible() ? "\<c-y>\<cr>" : "\<cr>"
+" endfunction
+
+" augroup lsp_install
+"   au!
+"   autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+" augroup END
+" command! LspDebug let lsp_log_verbose=1 | let lsp_log_file = expand('~/lsp.log')
+
+" let g:lsp_diagnostics_enabled = 1
+" let g:lsp_diagnostics_echo_cursor = 1
+" let g:asyncomplete_auto_popup = 1
+" let g:asyncomplete_auto_completeopt = 1
+" let g:asyncomplete_popup_delay = 200
+" let g:lsp_text_edit_enabled = 1
+
+let g:lsp_diagnostics_enabled = 1
+let g:lsp_diagnostics_echo_cursor = 1
+let g:asyncomplete_popup_delay = 200
+let g:lsp_text_edit_enabled = 0
+
+""   if executable('go-langserver')
+""       au User lsp_setup call lsp#register_server({
+""           \ 'name': 'go-langserver',
+""           \ 'cmd': {server_info->['go-langserver', '-gocodecompletion']},
+""           \ 'whitelist': ['go'],
+""           \ })
+""   "    autocmd BufWritePre *.go LspDocumentFormatSync
+""       autocmd FileType go setlocal omnifunc=lsp#complete
+""       au FileType go nnoremap <buffer><silent> gd :<C-u>LspDefinition<CR>
+""       au FileType go nnoremap <buffer><silent> gD :<C-u>LspReferences<CR>
+""       au FileType go nnoremap <buffer><silent> gs :<C-u>LspDocumentSymbol<CR>
+""       au FileType go nnoremap <buffer><silent> gS :<C-u>LspWorkspaceSymbol<CR>
+""       au FileType go nnoremap <buffer><silent> gQ :<C-u>LspDocumentFormat<CR>
+""       au FileType go vnoremap <buffer><silent> gQ :LspDocumentRangeFormat<CR>
+""       au FileType go nnoremap <buffer><silent> K :<C-u>LspHover<CR>
+""       au FileType go nnoremap <buffer><silent> <F1> :<C-u>LspImplementation<CR>
+""       au FileType go nnoremap <buffer><silent> <F2> :<C-u>LspRename<CR>
+""       au FileType go nnoremap <buffer><silent> <C-]> :<C-u>LspDefinition<CR>
+""    let g:lsp_log_verbose = 1
+""    let g:lsp_log_file = expand('~/vim-lsp.log')
+""    let lsp_signature_help_enabled = 0
+""   endif
+
