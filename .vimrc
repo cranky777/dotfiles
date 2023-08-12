@@ -4,7 +4,7 @@
 set nocompatible
 filetype off
 
-let $PATH = "~/.pyenv/shims:".$PATH
+" let $PATH = "~/.pyenv/shims:".$PATH
 
 call plug#begin('~/.vim/bundle')
 Plug 'vim-jp/vimdoc-ja'
@@ -13,19 +13,22 @@ Plug 'thinca/vim-quickrun'
 Plug 'thinca/vim-openbuf'
 Plug 'thinca/vim-ref'
 Plug 'tyru/open-browser.vim'
-Plug 'bling/vim-airline'
+"Plug 'vim-airline/vim-airline'
+"Plug 'vim-airline/vim-airline-themes'
+Plug 'itchyny/lightline.vim'
 "Plug 'altercation/vim-colors-solarized'
 Plug 'nanotech/jellybeans.vim'
 Plug 'tomasr/molokai'
 "Plug 'kien/ctrlp.vim'
 Plug 'nixprime/cpsm'
 Plug 'glidenote/memolist.vim'
-Plug 'davidhalter/jedi-vim'
-Plug 'nvie/vim-flake8'
+" Plug 'davidhalter/jedi-vim'
+" Plug 'nvie/vim-flake8'
 Plug 'mattn/emmet-vim'
 Plug 'mattn/vim-sqlfmt'
 Plug 'gosukiwi/vim-atom-dark'
 Plug 'dracula/vim'
+Plug 'sainnhe/edge'
 " Plug 'fatih/vim-go'
 " Plug 'MrPeterLee/VimWordpress'
 
@@ -49,11 +52,14 @@ Plug 'junegunn/fzf.vim'
 Plug 'ayu-theme/ayu-vim'
 Plug 'Lokaltog/vim-easymotion'
 Plug 'tpope/vim-repeat'
+Plug 'jacoborus/tender.vim'
+Plug 'tpope/vim-fugitive'
 " Plug 'colors/atom-dark.vim'
 
 " Plug 'scrooloose/nerdtree'
 " Plug 'justinmk/vim-dirvish'
 " call neobundle#end()
+Plug 'skanehira/qfopen.vim'
 call plug#end()
 
 filetype plugin on
@@ -81,10 +87,20 @@ nnoremap Q <Nop>
 noremap <C-j> <esc>
 noremap! <C-j> <esc>
 
+" コマンド
+command! -nargs=1 -complete=help Vhelp :vertical belowright help <args>
+nnoremap <Space>h :<C-u>vert bel h<Space>
+
 "補完関連
 autocmd FileType * setlocal formatoptions-=ro
 
 "Tags関連
+set tags+=.git/tags
+"" fugitive
+autocmd BufWritePost *
+      \ if exists('b:git_dir') && !empty(glob(b:git_dir.'/hooks/ctags')) |
+      \   call system('"'.b:git_dir.'/hooks/ctags"') |
+      \ endif
 
 "検索関連
 " 検索文字列が小文字の場合は大文字小文字を区別なく検索する
@@ -92,7 +108,9 @@ set ignorecase
 " 検索文字列に大文字が含まれている場合は区別して検索する
 set smartcase
 " 検索時に最後まで行ったら最初に戻る
-set wrapscan
+" set wrapscan
+" 検索時に最後まで行ったら最初に戻らない
+set nowrapscan
 " 検索文字列入力時に順次対象文字列にヒットさせない
 set noincsearch
 " Esc連打で検索時にハイライトを消す
@@ -105,9 +123,9 @@ runtime macros/matchit.vim
 
 "Color関連
 set t_Co=256 
+"set background=dark
 syntax enable
-set background=dark
-colorscheme iceberg
+colorscheme jellybeans
 "colorscheme dracula
 "hi Comment ctermfg=DarkCyan
 " colorscheme vim-atom-dark
@@ -168,8 +186,13 @@ augroup MyAutoCmd
   autocmd!
 augroup END
 
+" quickfix
 " make, grep などのコマンド後に自動的にQuickFixを開く
 autocmd MyAutoCmd QuickfixCmdPost make,grep,grepadd,vimgrep copen
+nnoremap [q :cprevious<CR>   " 前へ
+nnoremap ]q :cnext<CR>       " 次へ
+nnoremap [Q :<C-u>cfirst<CR> " 最初へ
+nnoremap ]Q :<C-u>clast<CR>  " 最後へ
 
 " QuickFixおよびHelpでは q でバッファを閉じる
 autocmd MyAutoCmd FileType help,qf nnoremap <buffer> q <C-w>c
@@ -194,10 +217,10 @@ let g:quickrun_config['html'] = {
 "------------------------------------
 " jedi.vim & neocomplete.vim
 "------------------------------------
-let g:jedi#auto_initialization = 1
-let g:jedi#rename_command = "<leader>R"
-let g:jedi#popup_on_dot = 1
-autocmd FileType python setlocal completeopt-=preview
+" let g:jedi#auto_initialization = 1
+" let g:jedi#rename_command = "<leader>R"
+" let g:jedi#popup_on_dot = 1
+" autocmd FileType python setlocal completeopt-=preview
 
 " if !exists('g:neocomplete#force_omni_input_patterns')
 "         let g:neocomplete#force_omni_input_patterns = {}
@@ -214,9 +237,18 @@ autocmd FileType python setlocal completeopt-=preview
 "------------------------------------
 " vim-airline.vim
 "------------------------------------
-set ambiwidth=double
-let g:airline_powerline_fonts=1
-" let g:airline_theme='papercolor'
+"let g:airline_powerline_fonts=1
+"let g:airline#extensions#tabline#enabled = 1
+
+let g:lightline = {
+			\ 'active': {
+				\   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+				\   'gitbranch': 'fugitive#head'
+      \ },
+		\ }
 
 
 "------------------------------------
@@ -252,29 +284,33 @@ let g:airline_powerline_fonts=1
 nnoremap <leader><leader> :Commands<CR>
 nnoremap <C-p> :Files<CR>
 let g:fzf_action = {
-  \ 'ctrl-o': 'tab split'
+  \ 'ctrl-o': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit'
   \ }
 
 "------------------------------------
 " memolist.vim
 "------------------------------------
 let g:memolist_path = "~/Dropbox/memolist_vim"
-nmap ,mf :exe "CtrlP" g:memolist_path<cr><f5>
+let g:memolist_fzf = 1
 nmap ,mc :MemoNew<cr>
 nmap ,mg :MemoGrep<cr>
 
 "------------------------------------
 " vim-flake8
 "------------------------------------
-autocmd FileType python map <buffer> <F8> :call Flake8()<CR>
-let g:flake8_ignore="F403"
+" autocmd FileType python map <buffer> <F8> :call Flake8()<CR>
+" let g:flake8_ignore="F403"
 
 "------------------------------------
 " vim-go
 "------------------------------------
 "filetype off
 "filetype plugin indent off
-au FileType go setlocal sw=4 ts=4 sts=4 noet
+autocmd FileType go setlocal sw=4 ts=4 sts=4 noet
+autocmd FileType python setlocal sw=4 sts=4 ts=4 et
+autocmd! BufWritePre *.go call execute('LspDocumentFormatSync') | call execute('LspCodeActionSync source.organizeImports')
 " au FileType go setlocal makeprg=go\ build\ ./... errorformat=%f:%l:\ %m
 "u BufWritePre *.go Fmt
 "filetype plugin indent on
@@ -302,31 +338,26 @@ if empty(globpath(&rtp, 'autoload/lsp.vim'))
   finish
 endif
 
-" function! s:on_lsp_buffer_enabled() abort
-"   setlocal omnifunc=lsp#complete
-"   setlocal signcolumn=yes
-"   nmap <buffer> gd <plug>(lsp-definition)
-"   nmap <buffer> <f2> <plug>(lsp-rename)
-"   inoremap <expr> <cr> pumvisible() ? "\<c-y>\<cr>" : "\<cr>"
-" endfunction
+function! s:on_lsp_buffer_enabled() abort
+  setlocal omnifunc=lsp#complete
+  setlocal signcolumn=yes
+  nmap <buffer> gd <plug>(lsp-definition)
+  nmap <buffer> <f2> <plug>(lsp-rename)
+  inoremap <expr> <cr> pumvisible() ? "\<c-y>\<cr>" : "\<cr>"
+endfunction
 
-" augroup lsp_install
-"   au!
-"   autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
-" augroup END
-" command! LspDebug let lsp_log_verbose=1 | let lsp_log_file = expand('~/lsp.log')
+augroup lsp_install
+  au!
+  autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
+command! LspDebug let lsp_log_verbose=1 | let lsp_log_file = expand('~/lsp.log')
 
-" let g:lsp_diagnostics_enabled = 1
-" let g:lsp_diagnostics_echo_cursor = 1
-" let g:asyncomplete_auto_popup = 1
-" let g:asyncomplete_auto_completeopt = 1
-" let g:asyncomplete_popup_delay = 200
-" let g:lsp_text_edit_enabled = 1
-
-let g:lsp_diagnostics_enabled = 1
-let g:lsp_diagnostics_echo_cursor = 1
+let g:lsp_diagnostics_enabled = 0
+let g:lsp_diagnostics_echo_cursor = 0
+let g:asyncomplete_auto_popup = 1
+let g:asyncomplete_auto_completeopt = 1
 let g:asyncomplete_popup_delay = 200
-let g:lsp_text_edit_enabled = 0
+let g:lsp_text_edit_enabled = 1
 
 ""   if executable('go-langserver')
 ""       au User lsp_setup call lsp#register_server({
@@ -351,3 +382,25 @@ let g:lsp_text_edit_enabled = 0
 ""    let lsp_signature_help_enabled = 0
 ""   endif
 
+" if executable('fcitx')
+" 	autocmd InsertLeave * :call system('fcitx-remote -c')
+" 	autocmd CmdlineLeave * :call system('fcitx-remote -c')
+" endif
+" inoremap <silent> <ESC> <ESC>:set iminsert=0<CR>
+
+let g:netrw_winsize = 30
+let g:netrw_altv = 1
+let g:netrw_alto = 0
+let g:netrw_preview = 1
+
+" qfopen
+augroup qfopen-bufenter
+  function! s:qfopen_keymap() abort
+    map <buffer> a <Plug>(qfopen-action)
+    map <buffer> <C-v> <Plug>(qfopen-open-vsplit)
+    map <buffer> <C-x> <Plug>(qfopen-open-split)
+    map <buffer> <C-t> <Plug>(qfopen-open-tab)
+  endfunction
+  au!
+  au FileType qf call s:qfopen_keymap()
+augroup END
