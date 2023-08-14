@@ -311,6 +311,8 @@ nmap ,mg :MemoGrep<cr>
 autocmd FileType go setlocal sw=4 ts=4 sts=4 noet
 autocmd FileType python setlocal sw=4 sts=4 ts=4 et
 autocmd! BufWritePre *.go call execute('LspDocumentFormatSync') | call execute('LspCodeActionSync source.organizeImports')
+autocmd! BufWritePre *.py call execute('LspDocumentFormatSync')
+let g:lsp_diagnostics_echo_cursor = 1
 " au FileType go setlocal makeprg=go\ build\ ./... errorformat=%f:%l:\ %m
 "u BufWritePre *.go Fmt
 "filetype plugin indent on

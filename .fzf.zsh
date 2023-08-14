@@ -10,4 +10,5 @@ fi
 
 # Key bindings
 # ------------
-source "/home/nori/.fzf/shell/key-bindings.zsh"
+key_bindings="/home/nori/.fzf/shell/key-bindings.zsh"
+[ -f $key_bindings ] && source $key_bindings
