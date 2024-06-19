@@ -1,6 +1,3 @@
-"----------------------------------------------------
-" neobundle.vim
-"----------------------------------------------------
 set nocompatible
 filetype off
 
@@ -150,25 +147,6 @@ set autowrite
 "その他
 set helplang=ja
 
-"gvim(主に windows 用)
-if has('gui_running')
-	set guicursor=a:blinkon0
-	set guioptions-=T
-	set guioptions-=m
-	set guioptions-=r
-	if has('win32')
-		" Windows用
-		set guifont=MS_Gothic:h12:cSHIFTJIS
-		"set guifont=MS_Mincho:h12:cSHIFTJIS
-		" 行間隔の設定
-		set linespace=1
-		" 一部のUCS文字の幅を自動計測して決める
-		if has('kaoriya')
-			set ambiwidth=auto
-		endif
-	endif
-endif
-
 " MoveToNewTab
 nnoremap <silent> tm :<C-u>call <SID>MoveToNewTab()<CR>
 function! s:MoveToNewTab()
@@ -224,25 +202,6 @@ let g:previm_open_cmd = 'google-chrome'
 "       \ 'outputter': 'browser'
 "       \ }
 " 
-"------------------------------------
-" jedi.vim & neocomplete.vim
-"------------------------------------
-" let g:jedi#auto_initialization = 1
-" let g:jedi#rename_command = "<leader>R"
-" let g:jedi#popup_on_dot = 1
-" autocmd FileType python setlocal completeopt-=preview
-
-" if !exists('g:neocomplete#force_omni_input_patterns')
-"         let g:neocomplete#force_omni_input_patterns = {}
-" endif
-
-" let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
-
-
-"------------------------------------
-" vim-powerline.vim
-"------------------------------------
-"let g:Powerline_symbols = 'fancy'
 
 "------------------------------------
 " vim-airline.vim
@@ -259,32 +218,6 @@ let g:lightline = {
 				\   'gitbranch': 'fugitive#head'
       \ },
 		\ }
-
-
-"------------------------------------
-" ctrlp.vim
-"------------------------------------
-""" " キャッシュディレクトリ
-""" let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
-""" 
-""" " キャッシュを終了時に削除しない
-""" let g:ctrlp_clear_cache_on_exit = 0
-""" 
-""" " 遅延再描画
-""" let g:ctrlp_lazy_update = 1
-""" 
-""" " ルートパスと認識させるためのファイル
-""" let g:ctrlp_root_markers = ['Gemfile', 'pom.xml', 'build.xml']
-""" 
-""" " CtrlPのウィンドウ最大高さ
-""" let g:ctrlp_max_height = 20
-""" 
-""" " 無視するディレクトリ
-""" let g:ctrlp_custom_ignore = {
-"""   \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-"""   \ 'file': '\v\.(exe|so|dll)$',
-"""   \ 'link': 'some_bad_symbolic_links',
-"""   \ }
 
 "------------------------------------
 " fzf.vim
@@ -308,21 +241,10 @@ nmap ,mc :MemoNew<cr>
 nmap ,mg :MemoGrep<cr>
 
 "------------------------------------
-" vim-flake8
-"------------------------------------
-" autocmd FileType python map <buffer> <F8> :call Flake8()<CR>
-" let g:flake8_ignore="F403"
-
-"------------------------------------
 " vim-go
 "------------------------------------
 "filetype off
 "filetype plugin indent off
-autocmd FileType go setlocal sw=4 ts=4 sts=4 noet
-autocmd FileType python setlocal sw=4 sts=4 ts=4 et
-autocmd! BufWritePre *.go call execute('LspDocumentFormatSync') | call execute('LspCodeActionSync source.organizeImports')
-autocmd! BufWritePre *.py call execute('LspDocumentFormatSync')
-let g:lsp_diagnostics_echo_cursor = 1
 " au FileType go setlocal makeprg=go\ build\ ./... errorformat=%f:%l:\ %m
 "u BufWritePre *.go Fmt
 "filetype plugin indent on
@@ -343,9 +265,8 @@ xmap <Leader>s <Plug>(easymotion-s2)
 
 
 "------------------------------------
-" easymotion
+" lsp
 "------------------------------------
-
 if empty(globpath(&rtp, 'autoload/lsp.vim'))
   finish
 endif
@@ -370,6 +291,11 @@ let g:asyncomplete_auto_popup = 1
 let g:asyncomplete_auto_completeopt = 1
 let g:asyncomplete_popup_delay = 200
 let g:lsp_text_edit_enabled = 1
+
+autocmd FileType go setlocal sw=4 ts=4 sts=4 noet
+autocmd FileType python setlocal sw=4 sts=4 ts=4 et
+autocmd! BufWritePre *.go call execute('LspDocumentFormatSync') | call execute('LspCodeActionSync source.organizeImports')
+autocmd! BufWritePre *.py call execute('LspDocumentFormatSync')
 
 ""   if executable('go-langserver')
 ""       au User lsp_setup call lsp#register_server({
