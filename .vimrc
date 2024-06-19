@@ -55,6 +55,9 @@ Plug 'tpope/vim-repeat'
 Plug 'jacoborus/tender.vim'
 Plug 'tpope/vim-fugitive'
 " Plug 'colors/atom-dark.vim'
+Plug 'godlygeek/tabular'
+Plug 'preservim/vim-markdown'
+Plug 'previm/previm'
 
 " Plug 'scrooloose/nerdtree'
 " Plug 'justinmk/vim-dirvish'
@@ -202,18 +205,25 @@ cmap w!! w !sudo tee > /dev/null %
 
 "プラグイン関連
 "----------------------------------------------------
+" markdown
+"----------------------------------------------------
+let g:vim_markdown_folding_disabled = 1
+let g:previm_enable_realtime = 1
+let g:previm_open_cmd = 'google-chrome'
+
+"----------------------------------------------------
 " quickrun.vim
 "----------------------------------------------------
-let g:quickrun_config = {}
-let g:quickrun_config['*'] = {'runmode': "async:remote:vimproc", 'split': 'below'}
-let g:quickrun_config['markdown'] = {
-      \ 'outputter': 'browser'
-      \ }
-let g:quickrun_config['html'] = {
-			\ 'exec': 		'%c %s',
-      \ 'outputter': 'browser'
-      \ }
-
+" let g:quickrun_config = {}
+" let g:quickrun_config['*'] = {'runmode': "async:remote:vimproc", 'split': 'below'}
+" let g:quickrun_config['markdown'] = {
+"       \ 'outputter': 'browser'
+"       \ }
+" let g:quickrun_config['html'] = {
+" 			\ 'exec': 		'%c %s',
+"       \ 'outputter': 'browser'
+"       \ }
+" 
 "------------------------------------
 " jedi.vim & neocomplete.vim
 "------------------------------------
