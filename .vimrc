@@ -294,6 +294,38 @@ let g:asyncomplete_auto_completeopt = 1
 let g:asyncomplete_popup_delay = 200
 let g:lsp_text_edit_enabled = 1
 
+" debug
+" let lsp_log_verbose=1
+" let lsp_log_file = '/tmp/lsp.log'
+
+let g:lsp_settings = {
+  \  'pylsp-all': {
+  \    'workspace_config': {
+  \      'pylsp': {
+  \        'configurationSources': ['flake8'],
+	\     	 'formatCommand': 'autopep8 --in-place --aggressive --aggressive -',
+  \        'plugins': {
+  \          'flake8': {
+  \            'enabled': 1
+  \          },
+  \          'mccabe': {
+  \            'enabled': 0
+  \          },
+  \          'pycodestyle': {
+  \            'enabled': 0
+  \          },
+  \          'pyflakes': {
+  \            'enabled': 0
+  \          },
+  \          'autopep8': {
+  \            'enabled': 1
+  \          },
+  \        }
+  \      }
+  \    }
+  \  }
+  \}
+
 autocmd FileType go setlocal sw=4 ts=4 sts=4 noet
 autocmd FileType python setlocal sw=4 sts=4 ts=4 et
 autocmd! BufWritePre *.go call execute('LspDocumentFormatSync') | call execute('LspCodeActionSync source.organizeImports')
