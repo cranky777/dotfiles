@@ -298,12 +298,14 @@ let g:lsp_text_edit_enabled = 1
 " let lsp_log_verbose=1
 " let lsp_log_file = '/tmp/lsp.log'
 
+"	\     	 'formatCommand': 'autopep8 --in-place --aggressive --aggressive -',
+
 let g:lsp_settings = {
   \  'pylsp-all': {
   \    'workspace_config': {
   \      'pylsp': {
   \        'configurationSources': ['flake8'],
-	\     	 'formatCommand': 'autopep8 --in-place --aggressive --aggressive -',
+	\     	 'formatCommand': 'black -',
   \        'plugins': {
   \          'flake8': {
   \            'enabled': 1
@@ -318,6 +320,9 @@ let g:lsp_settings = {
   \            'enabled': 0
   \          },
   \          'autopep8': {
+  \            'enabled': 0
+  \          },
+  \          'black': {
   \            'enabled': 1
   \          },
   \        }
