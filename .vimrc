@@ -10,24 +10,16 @@ Plug 'thinca/vim-quickrun'
 Plug 'thinca/vim-openbuf'
 Plug 'thinca/vim-ref'
 Plug 'tyru/open-browser.vim'
-"Plug 'vim-airline/vim-airline'
-"Plug 'vim-airline/vim-airline-themes'
 Plug 'itchyny/lightline.vim'
-"Plug 'altercation/vim-colors-solarized'
 Plug 'nanotech/jellybeans.vim'
 Plug 'tomasr/molokai'
-"Plug 'kien/ctrlp.vim'
 Plug 'nixprime/cpsm'
 Plug 'glidenote/memolist.vim'
-" Plug 'davidhalter/jedi-vim'
-" Plug 'nvie/vim-flake8'
 Plug 'mattn/emmet-vim'
 Plug 'mattn/vim-sqlfmt'
 Plug 'gosukiwi/vim-atom-dark'
 Plug 'dracula/vim'
 Plug 'sainnhe/edge'
-" Plug 'fatih/vim-go'
-" Plug 'MrPeterLee/VimWordpress'
 
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/asyncomplete.vim'
@@ -51,7 +43,6 @@ Plug 'Lokaltog/vim-easymotion'
 Plug 'tpope/vim-repeat'
 Plug 'jacoborus/tender.vim'
 Plug 'tpope/vim-fugitive'
-" Plug 'colors/atom-dark.vim'
 Plug 'godlygeek/tabular'
 Plug 'preservim/vim-markdown'
 Plug 'previm/previm'
@@ -146,6 +137,26 @@ set autowrite
 
 "その他
 set helplang=ja
+
+" TAB PAGE
+set showtabline=2
+" The prefix key.
+nnoremap    [Tag]   <Nop>
+nmap    <Space> [Tag]
+" Tab jump
+for n in range(1, 9)
+	  execute 'nnoremap <silent> [Tag]'.n  ':<C-u>tabnext'.n.'<CR>'
+endfor
+" {Tag]1 で1番左のタブ、{Tag]2 で1番左から2番目のタブにジャンプ
+
+map <silent> [Tag]c :tablast <bar> tabnew<CR>
+" {Tag]c 新しいタブを一番右に作る
+map <silent> [Tag]x :tabclose<CR>
+" {Tag]x タブを閉じる
+map <silent> [Tag]n :tabnext<CR>
+" {Tag]n 次のタブ
+map <silent> [Tag]p :tabprevious<CR>
+" {Tag]p 前のタブ
 
 " MoveToNewTab
 nnoremap <silent> tm :<C-u>call <SID>MoveToNewTab()<CR>
@@ -274,9 +285,23 @@ endif
 function! s:on_lsp_buffer_enabled() abort
   setlocal omnifunc=lsp#complete
   setlocal signcolumn=yes
-  nmap <buffer> gd <plug>(lsp-definition)
   nmap <buffer> <f2> <plug>(lsp-rename)
+"  nmap <buffer> <f3> <plug>(lsp-previous-diagnostic)
+  nmap <buffer> <f4> <plug>(lsp-document-format)
   inoremap <expr> <cr> pumvisible() ? "\<c-y>\<cr>" : "\<cr>"
+
+	nmap <buffer> gd <plug>(lsp-definition)
+	nmap <buffer> gs <plug>(lsp-document-symbol-search)
+	nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
+	nmap <buffer> gr <plug>(lsp-references)
+	nmap <buffer> gi <plug>(lsp-implementation)
+	nmap <buffer> gt <plug>(lsp-type-definition)
+	nmap <buffer> <leader>rn <plug>(lsp-rename)
+	nmap <buffer> [g <plug>(lsp-previous-diagnostic)
+	nmap <buffer> ]g <plug>(lsp-next-diagnostic)
+	nmap <buffer> K <plug>(lsp-hover)
+	nnoremap <buffer> <expr><c-f> lsp#scroll(+4)
+	nnoremap <buffer> <expr><c-d> lsp#scroll(-4)
 endfunction
 
 augroup lsp_install
@@ -295,20 +320,26 @@ let g:asyncomplete_popup_delay = 200
 let g:lsp_text_edit_enabled = 1
 
 " debug
-" let lsp_log_verbose=1
-" let lsp_log_file = '/tmp/lsp.log'
-
-"	\     	 'formatCommand': 'autopep8 --in-place --aggressive --aggressive -',
+ let lsp_log_verbose=1
+ let lsp_log_file = '/tmp/lsp.log'
 
 let g:lsp_settings = {
   \  'pylsp-all': {
   \    'workspace_config': {
-  \      'pylsp': {
   \        'configurationSources': ['flake8'],
-	\     	 'formatCommand': 'black -',
+	\     	 'formatCommand': 'black -q -',
+  \      'pylsp': {
   \        'plugins': {
-  \          'flake8': {
+  \          'black': {
   \            'enabled': 1
+  \          },
+  \          'yapf': {
+  \            'enabled': 0
+  \          },
+  \          'flake8': {
+  \            'enabled': 1,
+	\						 'maxLineLength': 88,
+	\            'ignore': ['E203', 'E701', 'W503'],
   \          },
   \          'mccabe': {
   \            'enabled': 0
@@ -321,9 +352,6 @@ let g:lsp_settings = {
   \          },
   \          'autopep8': {
   \            'enabled': 0
-  \          },
-  \          'black': {
-  \            'enabled': 1
   \          },
   \        }
   \      }
