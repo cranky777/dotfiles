@@ -317,7 +317,7 @@ let g:lsp_diagnostics_echo_cursor = 1
 let g:asyncomplete_auto_popup = 1
 let g:asyncomplete_auto_completeopt = 1
 let g:asyncomplete_popup_delay = 200
-let g:lsp_text_edit_enabled = 1
+let g:lsp_text_edit_enabled = 0
 
 " debug
  let lsp_log_verbose=1
@@ -361,8 +361,8 @@ let g:lsp_settings = {
 
 autocmd FileType go setlocal sw=4 ts=4 sts=4 noet
 autocmd FileType python setlocal sw=4 sts=4 ts=4 et
-autocmd! BufWritePre *.go call execute('LspDocumentFormatSync') | call execute('LspCodeActionSync source.organizeImports')
-autocmd! BufWritePre *.py call execute('LspDocumentFormatSync')
+" autocmd! BufWritePre *.go call execute('LspDocumentFormatSync') | call execute('LspCodeActionSync source.organizeImports')
+" autocmd! BufWritePre *.py call execute('LspDocumentFormatSync')
 
 ""   if executable('go-langserver')
 ""       au User lsp_setup call lsp#register_server({
