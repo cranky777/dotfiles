@@ -11,46 +11,52 @@ Plug 'thinca/vim-openbuf'
 Plug 'thinca/vim-ref'
 Plug 'tyru/open-browser.vim'
 Plug 'itchyny/lightline.vim'
-Plug 'nanotech/jellybeans.vim'
-Plug 'tomasr/molokai'
-Plug 'nixprime/cpsm'
 Plug 'glidenote/memolist.vim'
 Plug 'mattn/emmet-vim'
 Plug 'mattn/vim-sqlfmt'
-Plug 'gosukiwi/vim-atom-dark'
+
+" color themes
 Plug 'dracula/vim'
 Plug 'sainnhe/edge'
+Plug 'nanotech/jellybeans.vim'
+Plug 'tomasr/molokai'
+Plug 'sjl/badwolf'
+Plug 'vim-scripts/twilight'
+Plug 'joshdick/onedark.vim'
+Plug 'cocopon/iceberg.vim'
+Plug 'gosukiwi/vim-atom-dark'
+Plug 'morhetz/gruvbox'
+Plug 'jacoborus/tender.vim'
 
+" LSP
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'mattn/vim-lsp-settings'
 Plug 'mattn/vim-lsp-icons'
-
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
 
-Plug 'sjl/badwolf'
-Plug 'vim-scripts/twilight'
-Plug 'morhetz/gruvbox'
-Plug 'joshdick/onedark.vim'
-Plug 'cocopon/iceberg.vim'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'ayu-theme/ayu-vim'
-Plug 'Lokaltog/vim-easymotion'
+Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-repeat'
-Plug 'jacoborus/tender.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'godlygeek/tabular'
 Plug 'preservim/vim-markdown'
 Plug 'previm/previm'
 
+Plug 'vim-test/vim-test'
+Plug 'tpope/vim-dispatch'
+
 " Plug 'scrooloose/nerdtree'
 " Plug 'justinmk/vim-dirvish'
-" call neobundle#end()
 Plug 'skanehira/qfopen.vim'
+Plug 'skanehira/translate.vim'
+Plug 'mattn/sonictemplate-vim'
+
 call plug#end()
 
 filetype plugin on
@@ -77,6 +83,7 @@ nnoremap ZQ <Nop>
 nnoremap Q <Nop>
 noremap <C-j> <esc>
 noremap! <C-j> <esc>
+let mapleader = "\<Space>"
 
 " コマンド
 command! -nargs=1 -complete=help Vhelp :vertical belowright help <args>
@@ -213,6 +220,8 @@ let g:previm_open_cmd = 'google-chrome'
 "       \ 'outputter': 'browser'
 "       \ }
 " 
+nnoremap \r :cclose<CR>:write<CR>:QuickRun -mode n<CR>
+xnoremap \r :<C-U>cclose<CR>:write<CR>gv:QuickRun -mode v<CR>
 
 "------------------------------------
 " vim-airline.vim
@@ -226,7 +235,7 @@ let g:lightline = {
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
       \ },
       \ 'component_function': {
-				\   'gitbranch': 'fugitive#head'
+				\   'gitbranch': 'FugitiveHead'
       \ },
 		\ }
 
@@ -252,27 +261,18 @@ nmap ,mc :MemoNew<cr>
 nmap ,mg :MemoGrep<cr>
 
 "------------------------------------
-" vim-go
-"------------------------------------
-"filetype off
-"filetype plugin indent off
-" au FileType go setlocal makeprg=go\ build\ ./... errorformat=%f:%l:\ %m
-"u BufWritePre *.go Fmt
-"filetype plugin indent on
-"syntax on
-" let g:go_fmt_command = "goimports"
-" let g:go_version_warning = 0
-
-"------------------------------------
 " easymotion
 "------------------------------------
 map <Leader> <Plug>(easymotion-prefix)
-map f <Plug>(easymotion-fl)
-map t <Plug>(easymotion-tl)
-map F <Plug>(easymotion-Fl)
-map T <Plug>(easymotion-Tl)
+" map f <Plug>(easymotion-fl)
+" map t <Plug>(easymotion-tl)
+" map F <Plug>(easymotion-Fl)
+" map T <Plug>(easymotion-Tl)
 nmap <Leader>s <Plug>(easymotion-s2)
-xmap <Leader>s <Plug>(easymotion-s2)
+nmap <Leader>t <Plug>(easymotion-t2)
+map <Leader>; <Plug>(easymotion-next)
+map <Leader>, <Plug>(easymotion-prev)
+
 
 
 "------------------------------------
@@ -295,13 +295,13 @@ function! s:on_lsp_buffer_enabled() abort
 	nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
 	nmap <buffer> gr <plug>(lsp-references)
 	nmap <buffer> gi <plug>(lsp-implementation)
-	nmap <buffer> gt <plug>(lsp-type-definition)
+"	nmap <buffer> gt <plug>(lsp-type-definition)
 	nmap <buffer> <leader>rn <plug>(lsp-rename)
 	nmap <buffer> [g <plug>(lsp-previous-diagnostic)
 	nmap <buffer> ]g <plug>(lsp-next-diagnostic)
 	nmap <buffer> K <plug>(lsp-hover)
-	nnoremap <buffer> <expr><c-f> lsp#scroll(+4)
-	nnoremap <buffer> <expr><c-d> lsp#scroll(-4)
+"	nnoremap <buffer> <expr><c-f> lsp#scroll(+4)
+"	nnoremap <buffer> <expr><c-d> lsp#scroll(-4)
 endfunction
 
 augroup lsp_install
@@ -356,11 +356,33 @@ let g:lsp_settings = {
   \        }
   \      }
   \    }
+  \  },
+  \  'gopls': {
+  \    'initialization_options': {
+  \      'usePlaceholders': v:true,
+  \    },
   \  }
   \}
 
+
+function! s:lsp_python_pip(module)
+  echo 'Installing '.a:module
+  let loc = g:lsp_settings#global_settings_dir().'/servers/'
+  let command = '/venv/bin/pip'
+  let names = ['pylsp-all']
+  for name in names
+    let code = loc.name.command
+    echo '> '.code .' ' .a:module
+    echo system(code.' '.a:module)
+  endfor
+  echo 'Ended'
+endfunction
+
+command! -nargs=1 LspPip call s:lsp_python_pip("<args>")
 autocmd FileType go setlocal sw=4 ts=4 sts=4 noet
 autocmd FileType python setlocal sw=4 sts=4 ts=4 et
+autocmd! BufWritePre *.go call execute('LspDocumentFormatSync') | call execute('LspCodeActionSync source.organizeImports')
+
 " autocmd! BufWritePre *.go call execute('LspDocumentFormatSync') | call execute('LspCodeActionSync source.organizeImports')
 " autocmd! BufWritePre *.py call execute('LspDocumentFormatSync')
 
@@ -392,6 +414,22 @@ autocmd FileType python setlocal sw=4 sts=4 ts=4 et
 " 	autocmd CmdlineLeave * :call system('fcitx-remote -c')
 " endif
 " inoremap <silent> <ESC> <ESC>:set iminsert=0<CR>
+
+"------------------------------------
+" vim-test
+"------------------------------------
+let g:test#strategy = "dispatch"
+" let g:test#strategy = "basic"
+let g:test#go#runner = 'gotest'
+let g:test#go#gotest#executable = '/usr/local/bin/gotest'
+let g:test#go#gotest#options = '-v'
+let g:test#preserve_screen = 1
+
+nmap <silent> <leader>t :TestNearest<CR>
+nmap <silent> <leader>T :TestFile<CR>
+nmap <silent> <leader>a :TestSuite<CR>
+nmap <silent> <leader>l :TestLast<CR>
+nmap <silent> <leader>g :TestVisit<CR>
 
 let g:netrw_winsize = 30
 let g:netrw_altv = 1

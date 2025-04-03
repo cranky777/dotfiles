@@ -11,22 +11,22 @@ then
   zstyle ':completion:*' recent-dirs-insert both
 fi
 
-case ${UID} in
-0)
-    PROMPT="%B%{[31m%}%/#%{[m%}%b "
-    PROMPT2="%B%{[31m%}%_#%{[m%}%b "
-    SPROMPT="%B%{[31m%}%r is correct? [n,y,a,e]:%{[m%}%b "
-    [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
-        PROMPT="%{[37m%}${HOST%%.*} ${PROMPT}"
-    ;;
-*)
-    PROMPT="%{[31m%}%/%%%{[m%} "
-    PROMPT2="%{[31m%}%_%%%{[m%} "
-    SPROMPT="%{[31m%}%r is correct? [n,y,a,e]:%{[m%} "
-    [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
-        PROMPT="%{[37m%}${HOST%%.*} ${PROMPT}"
-    ;;
-esac
+# case ${UID} in
+# 0)
+#     PROMPT="%B%{[31m%}%/#%{[m%}%b "
+#     PROMPT2="%B%{[31m%}%_#%{[m%}%b "
+#     SPROMPT="%B%{[31m%}%r is correct? [n,y,a,e]:%{[m%}%b "
+#     [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
+#         PROMPT="%{[37m%}${HOST%%.*} ${PROMPT}"
+#     ;;
+# *)
+#     PROMPT="%{[31m%}%/%%%{[m%} "
+#     PROMPT2="%{[31m%}%_%%%{[m%} "
+#     SPROMPT="%{[31m%}%r is correct? [n,y,a,e]:%{[m%} "
+#     [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
+#         PROMPT="%{[37m%}${HOST%%.*} ${PROMPT}"
+#     ;;
+# esac
 
 
 ### case "${TERM}" in
@@ -87,6 +87,9 @@ fi
 #     command ssh $@
 #   fi
 # }
+fpath+=($HOME/.zsh/pure)
+autoload -U promptinit; promptinit
+prompt pure
 
 # filter
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -116,7 +119,7 @@ alias "${FILTER}-kill"=filter-kill
 
 
 # fd - cd to selected directory
-fcd() {
+function fcd () {
   local dir
   dir=$(find ${1:-.} -path '*/\.*' -prune \
                   -o -type d -print 2> /dev/null | fzf +m) &&
