@@ -16,7 +16,6 @@ Plug 'mattn/emmet-vim'
 Plug 'mattn/vim-sqlfmt'
 
 " color themes
-Plug 'dracula/vim'
 Plug 'sainnhe/edge'
 Plug 'nanotech/jellybeans.vim'
 Plug 'tomasr/molokai'
@@ -27,6 +26,9 @@ Plug 'cocopon/iceberg.vim'
 Plug 'gosukiwi/vim-atom-dark'
 Plug 'morhetz/gruvbox'
 Plug 'jacoborus/tender.vim'
+Plug 'dracula/vim', { 'as': 'dracula' }
+" Plug 'w0ng/vim-hybrid'
+" Plug 'rose-pine/vim'
 
 " LSP
 Plug 'prabirshrestha/async.vim'
@@ -56,6 +58,9 @@ Plug 'tpope/vim-dispatch'
 Plug 'skanehira/qfopen.vim'
 Plug 'skanehira/translate.vim'
 Plug 'mattn/sonictemplate-vim'
+
+Plug 'mattn/vim-molder'
+Plug 'mattn/vim-molder-oil'
 
 call plug#end()
 
@@ -91,6 +96,7 @@ nnoremap <Space>h :<C-u>vert bel h<Space>
 
 "補完関連
 autocmd FileType * setlocal formatoptions-=ro
+set dictionary+=/usr/share/dict/words
 
 "Tags関連
 set tags+=.git/tags
@@ -295,7 +301,7 @@ function! s:on_lsp_buffer_enabled() abort
 	nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
 	nmap <buffer> gr <plug>(lsp-references)
 	nmap <buffer> gi <plug>(lsp-implementation)
-"	nmap <buffer> gt <plug>(lsp-type-definition)
+	nmap <buffer> ge <plug>(lsp-type-definition)
 	nmap <buffer> <leader>rn <plug>(lsp-rename)
 	nmap <buffer> [g <plug>(lsp-previous-diagnostic)
 	nmap <buffer> ]g <plug>(lsp-next-diagnostic)
@@ -383,38 +389,6 @@ autocmd FileType go setlocal sw=4 ts=4 sts=4 noet
 autocmd FileType python setlocal sw=4 sts=4 ts=4 et
 autocmd! BufWritePre *.go call execute('LspDocumentFormatSync') | call execute('LspCodeActionSync source.organizeImports')
 
-" autocmd! BufWritePre *.go call execute('LspDocumentFormatSync') | call execute('LspCodeActionSync source.organizeImports')
-" autocmd! BufWritePre *.py call execute('LspDocumentFormatSync')
-
-""   if executable('go-langserver')
-""       au User lsp_setup call lsp#register_server({
-""           \ 'name': 'go-langserver',
-""           \ 'cmd': {server_info->['go-langserver', '-gocodecompletion']},
-""           \ 'whitelist': ['go'],
-""           \ })
-""   "    autocmd BufWritePre *.go LspDocumentFormatSync
-""       autocmd FileType go setlocal omnifunc=lsp#complete
-""       au FileType go nnoremap <buffer><silent> gd :<C-u>LspDefinition<CR>
-""       au FileType go nnoremap <buffer><silent> gD :<C-u>LspReferences<CR>
-""       au FileType go nnoremap <buffer><silent> gs :<C-u>LspDocumentSymbol<CR>
-""       au FileType go nnoremap <buffer><silent> gS :<C-u>LspWorkspaceSymbol<CR>
-""       au FileType go nnoremap <buffer><silent> gQ :<C-u>LspDocumentFormat<CR>
-""       au FileType go vnoremap <buffer><silent> gQ :LspDocumentRangeFormat<CR>
-""       au FileType go nnoremap <buffer><silent> K :<C-u>LspHover<CR>
-""       au FileType go nnoremap <buffer><silent> <F1> :<C-u>LspImplementation<CR>
-""       au FileType go nnoremap <buffer><silent> <F2> :<C-u>LspRename<CR>
-""       au FileType go nnoremap <buffer><silent> <C-]> :<C-u>LspDefinition<CR>
-""    let g:lsp_log_verbose = 1
-""    let g:lsp_log_file = expand('~/vim-lsp.log')
-""    let lsp_signature_help_enabled = 0
-""   endif
-
-" if executable('fcitx')
-" 	autocmd InsertLeave * :call system('fcitx-remote -c')
-" 	autocmd CmdlineLeave * :call system('fcitx-remote -c')
-" endif
-" inoremap <silent> <ESC> <ESC>:set iminsert=0<CR>
-
 "------------------------------------
 " vim-test
 "------------------------------------
@@ -447,3 +421,21 @@ augroup qfopen-bufenter
   au!
   au FileType qf call s:qfopen_keymap()
 augroup END
+
+command! Terminal call popup_create(term_start([&shell], #{ hidden: 1, term_finish: 'close'}), #{ border: [], minwidth: winwidth(0)/2, minheight: &lines/2, maxwidth: winwidth(0)/2, maxheight: &lines/2})
+
+" function! PopupTerm()
+"   let term = term_start($SHELL, {'hidden': 1})
+"   call popup_create(term, {
+"         \ 'line': '10%',
+"         \ 'col': '10%',
+"         \ 'minwidth': float2nr(&columns * 0.8),
+"         \ 'minheight': float2nr(&lines * 0.8),
+"         \ 'maxwidth': float2nr(&columns * 0.8),
+"         \ 'maxheight': float2nr(&lines * 0.8),
+"         \ 'border': [],
+"         \ 'borderchars': ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
+"         \ })
+" endfunction
+" 
+" nnoremap <leader>t :call PopupTerm()<CR>
