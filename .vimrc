@@ -171,6 +171,11 @@ map <silent> [Tag]n :tabnext<CR>
 map <silent> [Tag]p :tabprevious<CR>
 " {Tag]p 前のタブ
 
+"tab で1つ右のタブを開く
+nnoremap <tab> :tabnext<cr>
+"Shift-tab で1つ左のタブを開く
+nnoremap <S-tab> :tabprevious<cr>
+
 " MoveToNewTab
 nnoremap <silent> tm :<C-u>call <SID>MoveToNewTab()<CR>
 function! s:MoveToNewTab()
@@ -322,8 +327,8 @@ let g:lsp_diagnostics_echo_cursor = 1
 " let g:lsp_diagnostics_float_cursor = 1
 let g:asyncomplete_auto_popup = 1
 let g:asyncomplete_auto_completeopt = 1
-let g:asyncomplete_popup_delay = 200
-let g:lsp_text_edit_enabled = 0
+" let g:asyncomplete_popup_delay = 200
+let g:lsp_text_edit_enabled = 1
 
 " debug
  let lsp_log_verbose=1
@@ -375,11 +380,11 @@ function! s:lsp_python_pip(module)
   echo 'Installing '.a:module
   let loc = g:lsp_settings#global_settings_dir().'/servers/'
   let command = '/venv/bin/pip'
-  let names = ['pylsp-all']
+  let names = ['pyls', 'pylsp-all']
   for name in names
     let code = loc.name.command
-    echo '> '.code .' ' .a:module
-    echo system(code.' '.a:module)
+    echo '> '.code
+    echo system(code)
   endfor
   echo 'Ended'
 endfunction
@@ -387,7 +392,8 @@ endfunction
 command! -nargs=1 LspPip call s:lsp_python_pip("<args>")
 autocmd FileType go setlocal sw=4 ts=4 sts=4 noet
 autocmd FileType python setlocal sw=4 sts=4 ts=4 et
-autocmd! BufWritePre *.go call execute('LspDocumentFormatSync') | call execute('LspCodeActionSync source.organizeImports')
+" autocmd! BufWritePre *.go call execute('LspDocumentFormatSync') | call execute('LspCodeActionSync source.organizeImports')
+" autocmd! BufWritePre *.py call execute('LspDocumentFormatSync')
 
 "------------------------------------
 " vim-test
